@@ -3,8 +3,11 @@ const app = express();
 app.use(express.json());
 const product = require('./routes/productRoute');
 const errorMiddleware = require('./middleware/error.js');
-app.use('/api/v1', product);
+const user = require('./routes/userRoute');
 
+
+app.use('/api/v1', product);
+app.use('/api/v1', user);
 
 // Error Middleware
 app.use(errorMiddleware);
