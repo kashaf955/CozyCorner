@@ -169,3 +169,35 @@ exports.getSingleUser = catchAsyncErrors(async (req, res, next) => {
     user: user,
   });
 })
+
+// Update user role
+
+exports.updateUserRole = catchAsyncErrors(async (req, res, next) => {
+  const newUserData = {
+    name: req.body.name,
+    email: req.body.email,
+    role: req.body.role,
+  };
+  const user = await User.findByIdAndUpdate(req.params.id, newUserData, {
+    new: true,
+    runValidators: true,
+    useFindAndModify: false,
+  });
+  res.status(200).json({
+    success: true,
+    user,
+  });
+})
+
+// Delete user(admin)
+exports.deleteUser = catchAsyncErrors(async (req, res, next) => {
+  const user = await User.findById(req.params.id);
+  if (!user) {
+    return next(new ErrorHandler("User not found", 404));
+  }
+  await user.deleteOne();
+  res.status(200).json({
+    success: true,
+    message: "User deleted successfully",
+  });
+})
