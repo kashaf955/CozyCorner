@@ -106,20 +106,6 @@ Base URL: `/api/v1`
 | DELETE | `/product/:id` | Admin | Delete product |
 | PUT | `/review` | Private | Create/update review |
 
-## Progress Notes
-
-Completed so far:
-
-- Auth middleware protecting private routes
-- Product CRUD implemented
-- Clean MVC folder structure
-- Environment variables used for secrets
-
-Coming next:
-
-- Order CRUD and checkout flow
-- Remaining course modules
-
 ## Scripts
 
 | Command | Description |
