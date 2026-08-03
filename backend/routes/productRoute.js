@@ -30,6 +30,6 @@ router
     authorizeRoles("admin"),
     deleteProduct,
   )
-  .get("/product/:id", getProductDetails);
+  router.route("/product/:id").get(getProductDetails);
 
 module.exports = router;
