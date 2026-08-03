@@ -2,8 +2,6 @@
 
 E-commerce backend API built with Node.js, Express, and MongoDB.
 
-Progress so far covers the first part of the course (~4 of 16 hours): authentication, product CRUD, admin user management, and a clean MVC structure.
-
 ## Features
 
 - JWT authentication (register, login, logout) with HTTP-only cookies
