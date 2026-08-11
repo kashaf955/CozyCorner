@@ -1,6 +1,6 @@
 @import "tailwindcss";
 
-@theme {
+:root {
   --font-display: "Fraunces", serif;
   --font-sans: "Outfit", sans-serif;
   --color-ink: #1a2420;
@@ -8,6 +8,22 @@
   --color-sage: #5f7a6a;
   --color-forest: #2d4a3e;
   --color-leaf: #3d6b54;
+}
+
+.font-display {
+  font-family: var(--font-display);
+}
+
+.bg-leaf {
+  background-color: var(--color-leaf);
+}
+
+.text-mist {
+  color: var(--color-mist);
+}
+
+.text-mist-70 {
+  color: color-mix(in srgb, var(--color-mist) 70%, transparent);
 }
 
 * {
