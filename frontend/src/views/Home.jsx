@@ -6,10 +6,24 @@ import ProductCard from "../components/ProductCard.jsx";
 import api from "../api.js";
 
 const Home = () => {
+  const [products, setProducts] = useState([]);
+
+  useEffect(() => {
+    api
+      .get("/products")
+      .then((response) => {
+        setProducts(response.data.products);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }, []);
+
   return (
     <div className="min-h-screen bg-[#0f1714]">
       <Header />
       <Hero />
+      <ProductCard products={products} />
       <Footer />
     </div>
   );
