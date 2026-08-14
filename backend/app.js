@@ -16,10 +16,11 @@ app.use(cookieParser());
 const product = require('./routes/productRoute');
 const errorMiddleware = require('./middleware/error.js');
 const user = require('./routes/userRoute');
+const order = require('./routes/orderRoute.js');
 
 app.use('/api/v1', product);
 app.use('/api/v1', user);
-
+app.use('/api/v1', order);
 // Error Middleware
 app.use(errorMiddleware);
 
