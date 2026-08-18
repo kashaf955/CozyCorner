@@ -47,3 +47,18 @@ exports.getSingleOrder = catchAsyncErrors(async (req, res, next) => {
         order,
     });
 });
+
+//get loign user orders
+
+exports.myOrders = catchAsyncErrors(async (req, res, next) => {
+    const orders = await Order.find({ user: req.user._id });
+
+    if(!orders) {
+        return next(new ErrorHandler("No orders found", 404));
+    }
+
+    res.status(200).json({
+        success: true,
+        orders,
+    });
+});
