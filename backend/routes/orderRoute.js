@@ -6,6 +6,6 @@ const router = express.Router();
 
 router.route("/order/new").post(isAuthenticatedUser, newOrder);
 router.route("/order/me").get(isAuthenticatedUser, myOrders);
-router.route("/order/:id").get(isAuthenticatedUser, authorizeRoles("admin"), getSingleOrder);
+router.route("/order/:id").get(isAuthenticatedUser, getSingleOrder);
 
 module.exports = router;
