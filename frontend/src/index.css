@@ -79,3 +79,12 @@ body {
 .hero-bg {
   animation: slow-zoom 22s ease-out forwards;
 }
+
+.product-scroll {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.product-scroll::-webkit-scrollbar {
+  display: none;
+}
