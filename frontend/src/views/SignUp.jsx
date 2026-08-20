@@ -1,6 +1,6 @@
-import SignUpComp from "../components/SignUpComp.jsx";
-import Header from "../components/Header.jsx";
-import Footer from "../components/footer.jsx";
+import SignUpComp from "../components/layout/SignUpComp.jsx";
+import Header from "../components/layout/header.jsx";
+import Footer from "../components/layout/footer.jsx";
 
 const SignUp = () => {
   return (

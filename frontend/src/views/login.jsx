@@ -1,6 +1,6 @@
-import Header from "../components/Header.jsx";
-import Footer from "../components/footer.jsx";
-import LoginComp from "../components/LoginComp.jsx";
+import Header from "../components/layout/header.jsx";
+import Footer from "../components/layout/footer.jsx";
+import LoginComp from "../components/layout/LoginComp.jsx";
 
 const Login = () => {
   return (

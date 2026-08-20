@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
-import Header from "../components/Header.jsx";
-import Hero from "../components/hero.jsx";
-import Footer from "../components/footer.jsx";
-import ProductCard from "../components/ProductCard.jsx";
+import Header from "../components/layout/header.jsx";
+import Hero from "../components/layout/hero.jsx";
+import Footer from "../components/layout/footer.jsx";
+import ProductCard from "../components/layout/ProductCard.jsx";
 import api from "../api.js";
 
 const Home = () => {
