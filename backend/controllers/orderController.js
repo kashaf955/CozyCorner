@@ -115,7 +115,7 @@ exports.deleteOrder = catchAsyncErrors(async (req, res, next) => {
     if(!order) {
         return next(new ErrorHandler("Order not found", 404));
     }
-    await order.remove();
+    await order.deleteOne();
     res.status(200).json({
         success: true,
     });
