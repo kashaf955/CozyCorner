@@ -4,7 +4,7 @@ import Hero from "../components/layout/hero.jsx";
 import Footer from "../components/layout/footer.jsx";
 import ProductCard from "../components/layout/ProductCard.jsx";
 import api from "../api.js";
-
+import Metadata from "../components/layout/metadata.jsx";
 const Home = () => {
   const [products, setProducts] = useState([]);
 
@@ -21,6 +21,7 @@ const Home = () => {
 
   return (
     <div className="min-h-screen bg-[#0f1714]">
+      <Metadata title="Cozy Corner" description="Home page" keywords="home, page" />
       <Header />
       <Hero />
       <ProductCard products={products} />
