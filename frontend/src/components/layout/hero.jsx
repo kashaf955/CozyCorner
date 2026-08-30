@@ -20,12 +20,12 @@ const Hero = () => {
         </p>
 
         <h1 className="animate-fade-up-delay mt-5 max-w-xl font-display text-2xl font-medium leading-snug text-mist sm:text-3xl md:text-4xl">
-          Soft spaces made for everyday calm
+          Where comfort meets style
         </h1>
 
         <p className="animate-fade-up-delay mt-4 max-w-md text-base leading-relaxed text-white/75 md:text-lg">
-          Curated home pieces that turn quiet corners into your favorite place
-          to land.
+          Discover handpicked furniture and décor that make every room feel warm,
+          inviting, and unmistakably yours.
         </p>
 
         <div className="animate-fade-up-delay-2 mt-8 flex flex-wrap items-center gap-4">
