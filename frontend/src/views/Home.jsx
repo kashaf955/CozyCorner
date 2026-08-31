@@ -4,6 +4,7 @@ import Hero from "../components/layout/hero.jsx";
 import Footer from "../components/layout/footer.jsx";
 import ProductCard from "../components/layout/ProductCard.jsx";
 import Metadata from "../components/layout/metadata.jsx";
+import Loader from "../components/layout/loader.jsx";
 import { getProducts } from "../actions/productAction.js";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -21,7 +22,7 @@ const Home = () => {
       <Header />
       <Hero />
       {loading ? (
-        <p className="px-6 py-16 text-center text-mist-70">Loading products...</p>
+        <Loader />
       ) : error ? (
         <p className="px-6 py-16 text-center text-red-300">{error}</p>
       ) : (
