@@ -4,6 +4,7 @@ import Home from './views/Home.jsx';
 import Login from './views/login.jsx';
 import SignUp from './views/SignUp.jsx';
 import ProductDetail from './views/ProductDetail.jsx';
+import Product from './views/Product.jsx';
 
 const App = () => {
     return (
@@ -13,6 +14,7 @@ const App = () => {
                 <Route path="/login" element={<Login />} />
                 <Route path="/register" element={<SignUp />} />
                 <Route path="/product/:id" element={<ProductDetail />} />
+                <Route path="/products" element={<Product />} />
             </Routes>
         </Router>
     )
