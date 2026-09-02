@@ -1,16 +1,36 @@
-# React + Vite
+# CozyCorner Frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+React + Vite frontend for the CozyCorner e-commerce app.
 
-Currently, two official plugins are available:
+See the [main README](../README.md) for full setup, API docs, and project overview.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## Quick start
 
-## React Compiler
+```bash
+npm install
+npm run dev
+```
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+Runs at `http://localhost:5173`. Requires the backend at `http://localhost:3000`.
 
-## Expanding the ESLint configuration
+## Key files
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+| File | Purpose |
+|------|---------|
+| `src/api.js` | Axios instance pointing to backend |
+| `src/store.js` | Redux store |
+| `src/context/AlertContext.jsx` | Toast notifications (`useAlert`) |
+| `src/views/` | Page components |
+| `src/components/layout/` | Shared UI (Header, Footer, ProductCard, etc.) |
+
+## Alerts
+
+Use the custom alert hook instead of `react-alert`:
+
+```jsx
+import { useAlert } from "../context/AlertContext.jsx";
+
+const alert = useAlert();
+alert.success("Done!");
+alert.error("Something went wrong");
+```
