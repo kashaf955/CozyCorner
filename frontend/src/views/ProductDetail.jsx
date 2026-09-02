@@ -7,6 +7,7 @@ import { useAlert } from "../context/AlertContext.jsx";
 import Metadata from "../components/layout/metadata.jsx";
 import Header from "../components/layout/header.jsx";
 import Footer from "../components/layout/footer.jsx";
+import ProductImageCarousel from "../components/layout/ProductImageCarousel.jsx";
 
 const ProductDetail = () => {
   const { id } = useParams();
@@ -23,11 +24,6 @@ const ProductDetail = () => {
       alert.error(error);
     }
   }, [error, alert]);
-
-  const image =
-    product.images?.[0]?.url ||
-    product.image ||
-    "https://images.unsplash.com/photo-1555041469-a586c61ea9bc?auto=format&fit=crop&w=800&q=80";
 
   if (loading) {
     return (
@@ -50,10 +46,9 @@ const ProductDetail = () => {
       <div className="container mx-auto px-4 py-24 max-w-6xl">
         <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
           <div className="w-full">
-            <img
-              src={image}
-              alt={product.name}
-              className="h-full w-full rounded-lg object-cover"
+            <ProductImageCarousel
+              images={product.images}
+              productName={product.name}
             />
           </div>
           <div className="flex flex-col gap-4 text-mist">
