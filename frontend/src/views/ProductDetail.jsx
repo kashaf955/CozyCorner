@@ -16,6 +16,7 @@ const ProductDetail = () => {
   const { product = {}, loading, error } = useSelector((state) => state.productDetails);
   const alert = useAlert();
   const [quantity, setQuantity] = useState(1);
+  const [showReviewModal, setShowReviewModal] = useState(false);
   useEffect(() => {
     dispatch(getProductDetails(id));
   }, [dispatch, id]);
@@ -73,12 +74,17 @@ const ProductDetail = () => {
             <input type="number" value={quantity} onChange={(e) => setQuantity(e.target.value)} className="w-full text-center text-mist-70" />
             <button onClick={() => setQuantity(quantity + 1)} disabled={quantity >= product.stock} className="text-mist-70 hover:text-mist-100">+</button>
             </div>
+            <div className="flex items-center gap-2">
             <button
               type="button"
               className="w-full max-w-xs rounded-md bg-leaf px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-[#4a7d63]"
             >
               Add to Cart
             </button>
+              <button className="w-full max-w-xs rounded-md bg-leaf px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-[#4a7d63]" onClick={() => setShowReviewModal(true)}>
+                 Write a Review
+              </button>
+            </div>
             <p>
               status: {}
               <b>{product.stock <= 0 ? "Out of Stock" : product.stock < 10 ? "Hurry up! Only " + product.stock + " left" : "In Stock " + product.stock}</b>
@@ -101,7 +107,7 @@ const ProductDetail = () => {
                   <p>{review.createdAt.toLocaleDateString()}</p>
                 </div>
               ))}
-            </div>  
+            </div> 
           </div>
       </div>
       <Footer />
