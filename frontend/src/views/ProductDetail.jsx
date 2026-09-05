@@ -80,6 +80,10 @@ const ProductDetail = () => {
             >
               Add to Cart
             </button>
+            <p>
+              status: {}
+              <b>{product.stock <= 0 ? "Out of Stock" : product.stock < 10 ? "Hurry up! Only " + product.stock + " left" : "In Stock " + product.stock}</b>
+            </p>
           </div>
         </div>
       </div>
