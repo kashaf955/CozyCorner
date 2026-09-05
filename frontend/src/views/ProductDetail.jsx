@@ -8,6 +8,7 @@ import Metadata from "../components/layout/metadata.jsx";
 import Header from "../components/layout/header.jsx";
 import Footer from "../components/layout/footer.jsx";
 import ProductImageCarousel from "../components/layout/ProductImageCarousel.jsx";
+import RenderStars from "../components/layout/RenderStars.jsx";
 
 const ProductDetail = () => {
   const { id } = useParams();
@@ -35,6 +36,11 @@ const ProductDetail = () => {
     );
   }
 
+  const rating = product.ratings ?? product.rating ?? 0;
+  const reviewCount =
+    product.numOfReviews ??
+    (Array.isArray(product.reviews) ? product.reviews.length : 0);
+
   return (
     <div className="min-h-screen bg-[#0f1714]">
       <Metadata
@@ -43,7 +49,7 @@ const ProductDetail = () => {
         keywords={product.category}
       />
       <Header />
-      <div className="container mx-auto px-4 py-24 max-w-6xl">
+      <div className="container mx-auto max-w-6xl px-4 py-24">
         <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
           <div className="w-full">
             <ProductImageCarousel
@@ -51,9 +57,16 @@ const ProductDetail = () => {
               productName={product.name}
             />
           </div>
-          <div className="flex flex-col gap-4 text-mist">
-            <h1 className="font-display text-3xl">{product.name}</h1>
-            <p className="text-xl text-mist-70">${Number(product.price).toFixed(2)}</p>
+          <div className="flex flex-col justify-center gap-4 text-mist">
+            <h2 className="font-display text-3xl">{product.name}</h2>
+            <p className="text-mist-70">Product #: {product._id}</p>
+            <div className="flex items-center gap-1 text-sm">
+              <RenderStars rating={rating} />
+            </div>
+            <p className="text-sm text-mist-70">
+              {reviewCount} {reviewCount === 1 ? "review" : "reviews"}
+            </p>
+            <h1 className="text-4xl font-bold text-mist-70">${Number(product.price || 0).toFixed(2)}</h1>
             <p className="text-mist-70">{product.description}</p>
             <p className="text-sm text-mist-70">Stock: {product.stock}</p>
             <button

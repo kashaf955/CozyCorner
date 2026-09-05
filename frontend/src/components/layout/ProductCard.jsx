@@ -1,6 +1,7 @@
 import { useRef } from "react";
-import { FaStar, FaStarHalfAlt, FaRegStar, FaChevronLeft, FaChevronRight } from "react-icons/fa";
+import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 import { Link } from "react-router-dom";
+import RenderStars from "./RenderStars.jsx";
 
 const ProductCard = ({ products = [] }) => {
   const scrollRef = useRef(null);
@@ -13,23 +14,6 @@ const ProductCard = ({ products = [] }) => {
     const card = el.querySelector("article");
     const amount = card ? card.offsetWidth + 24 : 280;
     el.scrollBy({ left: direction * amount, behavior: "smooth" });
-  };
-
-  const renderStars = (rating = 0) => {
-    const stars = [];
-    const value = Number(rating) || 0;
-
-    for (let i = 1; i <= 5; i++) {
-      if (value >= i) {
-        stars.push(<FaStar key={i} className="text-amber-400" />);
-      } else if (value >= i - 0.5) {
-        stars.push(<FaStarHalfAlt key={i} className="text-amber-400" />);
-      } else {
-        stars.push(<FaRegStar key={i} className="text-amber-400/40" />);
-      }
-    }
-
-    return stars;
   };
 
   return (
@@ -98,7 +82,7 @@ const ProductCard = ({ products = [] }) => {
                       ${Number(product.price).toFixed(2)}
                     </p>
                     <div className="flex items-center gap-1 text-sm">
-                      {renderStars(rating)}
+                      <RenderStars rating={rating} />
                     </div>
                     <p className="text-sm text-mist-70">
                       {reviewCount} {reviewCount === 1 ? "review" : "reviews"}
