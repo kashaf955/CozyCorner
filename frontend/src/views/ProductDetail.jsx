@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState  } from "react";
 import { useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { getProductDetails } from "../actions/productAction.js";
@@ -15,7 +15,7 @@ const ProductDetail = () => {
   const dispatch = useDispatch();
   const { product = {}, loading, error } = useSelector((state) => state.productDetails);
   const alert = useAlert();
-
+  const [quantity, setQuantity] = useState(1);
   useEffect(() => {
     dispatch(getProductDetails(id));
   }, [dispatch, id]);
@@ -69,6 +69,11 @@ const ProductDetail = () => {
             <h1 className="text-4xl font-bold text-mist-70">${Number(product.price || 0).toFixed(2)}</h1>
             <p className="text-mist-70">{product.description}</p>
             <p className="text-sm text-mist-70">Stock: {product.stock}</p>
+            <div className="flex items-center gap-2 w-full max-w-xs bg-mist-900 rounded-md p-2 text-mist-70"> 
+            <button onClick={() => setQuantity(quantity - 1)} disabled={quantity <= 1} className="text-mist-70 hover:text-mist-100">-</button>
+            <input type="number" value={quantity} onChange={(e) => setQuantity(e.target.value)} className="w-full text-center text-mist-70" />
+            <button onClick={() => setQuantity(quantity + 1)} disabled={quantity >= product.stock} className="text-mist-70 hover:text-mist-100">+</button>
+            </div>
             <button
               type="button"
               className="w-full max-w-xs rounded-md bg-leaf px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-[#4a7d63]"
