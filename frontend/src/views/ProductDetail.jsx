@@ -67,7 +67,6 @@ const ProductDetail = () => {
               {reviewCount} {reviewCount === 1 ? "review" : "reviews"}
             </p>
             <h1 className="text-4xl font-bold text-mist-70">${Number(product.price || 0).toFixed(2)}</h1>
-            <p className="text-mist-70">{product.description}</p>
             <p className="text-sm text-mist-70">Stock: {product.stock}</p>
             <div className="flex items-center gap-2 w-full max-w-xs bg-mist-900 rounded-md p-2 text-mist-70"> 
             <button onClick={() => setQuantity(quantity - 1)} disabled={quantity <= 1} className="text-mist-70 hover:text-mist-100">-</button>
@@ -84,8 +83,26 @@ const ProductDetail = () => {
               status: {}
               <b>{product.stock <= 0 ? "Out of Stock" : product.stock < 10 ? "Hurry up! Only " + product.stock + " left" : "In Stock " + product.stock}</b>
             </p>
+           
+          </div>
+          <div className="flex flex-col gap-4">
+          <h2 className="text-2xl font-bold text-mist-70">Description</h2>
+          <p className="text-mist-70">{product.description}</p>
           </div>
         </div>
+        <div className="flex flex-col gap-4 mt-10">
+            <h2 className="text-2xl font-bold text-mist-70">Reviews</h2>
+            <div className="flex flex-col gap-4">
+              {product.reviews && Array.isArray(product.reviews) && product.reviews.length > 0 && product.reviews.map((review) => (
+                <div key={review._id}>
+                  <p>{review.name}</p>
+                  <p>{review.rating}</p>
+                  <p>{review.comment}</p>
+                  <p>{review.createdAt.toLocaleDateString()}</p>
+                </div>
+              ))}
+            </div>  
+          </div>
       </div>
       <Footer />
     </div>
