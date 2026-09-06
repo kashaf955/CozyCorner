@@ -9,6 +9,7 @@ import Header from "../components/layout/header.jsx";
 import Footer from "../components/layout/footer.jsx";
 import ProductImageCarousel from "../components/layout/ProductImageCarousel.jsx";
 import RenderStars from "../components/layout/RenderStars.jsx";
+import ReviewCard from "../components/layout/reviewCard.jsx";
 
 const ProductDetail = () => {
   const { id } = useParams();
@@ -135,12 +136,7 @@ const ProductDetail = () => {
               Array.isArray(product.reviews) &&
               product.reviews.length > 0 &&
               product.reviews.map((review) => (
-                <div key={review._id}>
-                  <p>{review.name}</p>
-                  <p>{review.rating}</p>
-                  <p>{review.comment}</p>
-                  <p>{review.createdAt.toLocaleDateString()}</p>
-                </div>
+                <ReviewCard key={review._id} review={review} />
               ))}
           </div>
         </div>
