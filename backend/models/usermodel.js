@@ -29,7 +29,8 @@ const userSchema = new mongoose.Schema({
         },  
         url: {
             type: String,
-            required: true
+            required: true,
+            default: 'https://ui-avatars.com/api/?name=' + this.name + '&background=random'
         }
     },
     role: {

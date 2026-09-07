@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { getProductDetails } from "../actions/productAction.js";
 import Loader from "../components/layout/loader.jsx";
@@ -10,9 +10,11 @@ import Footer from "../components/layout/footer.jsx";
 import ProductImageCarousel from "../components/layout/ProductImageCarousel.jsx";
 import RenderStars from "../components/layout/RenderStars.jsx";
 import ReviewCard from "../components/layout/reviewCard.jsx";
+import api from "../api.js";
 
 const ProductDetail = () => {
   const { id } = useParams();
+  const navigate = useNavigate();
   const dispatch = useDispatch();
   const {
     product = {},
@@ -22,6 +24,10 @@ const ProductDetail = () => {
   const alert = useAlert();
   const [quantity, setQuantity] = useState(1);
   const [showReviewModal, setShowReviewModal] = useState(false);
+  const [rating, setRating] = useState(0);
+  const [comment, setComment] = useState("");
+  const [submitting, setSubmitting] = useState(false);
+
   useEffect(() => {
     dispatch(getProductDetails(id));
   }, [dispatch, id]);
@@ -31,6 +37,41 @@ const ProductDetail = () => {
       alert.error(error);
     }
   }, [error, alert]);
+
+  const submitReview = async () => {
+    if (!rating || rating < 1 || rating > 5) {
+      alert.error("Please select a rating between 1 and 5");
+      return;
+    }
+    if (!comment.trim()) {
+      alert.error("Please write a comment");
+      return;
+    }
+
+    try {
+      setSubmitting(true);
+      await api.put("/review", {
+        rating: Number(rating),
+        comment: comment.trim(),
+        productId: id,
+      });
+      alert.success("Review submitted successfully");
+      setShowReviewModal(false);
+      setRating(0);
+      setComment("");
+      dispatch(getProductDetails(id));
+    } catch (err) {
+      const message = err.response?.data?.message || "Failed to submit review";
+      if (err.response?.status === 401) {
+        alert.error("Please login to write a review");
+        navigate("/login");
+      } else {
+        alert.error(message);
+      }
+    } finally {
+      setSubmitting(false);
+    }
+  };
 
   if (loading) {
     return (
@@ -42,10 +83,11 @@ const ProductDetail = () => {
     );
   }
 
-  const rating = product.ratings ?? product.rating ?? 0;
+  const currentRating = product.ratings ?? product.rating ?? 0;
   const reviewCount =
     product.numOfReviews ??
     (Array.isArray(product.reviews) ? product.reviews.length : 0);
+  const reviews = Array.isArray(product.reviews) ? product.reviews : [];
 
   return (
     <div className="min-h-screen bg-[#0f1714]">
@@ -67,7 +109,7 @@ const ProductDetail = () => {
             <h2 className="font-display text-3xl">{product.name}</h2>
             <p className="text-mist-70">Product #: {product._id}</p>
             <div className="flex items-center gap-1 text-sm">
-              <RenderStars rating={rating} />
+              <RenderStars rating={currentRating} />
             </div>
             <p className="text-sm text-mist-70">
               {reviewCount} {reviewCount === 1 ? "review" : "reviews"}
@@ -76,9 +118,10 @@ const ProductDetail = () => {
               ${Number(product.price || 0).toFixed(2)}
             </h1>
             <p className="text-sm text-mist-70">Stock: {product.stock}</p>
-            <div className="flex items-center gap-2 w-full max-w-xs bg-mist-900 rounded-md p-2 text-mist-70">
+            <div className="flex w-full max-w-xs items-center gap-2 rounded-md bg-mist-900 p-2 text-mist-70">
               <button
-                onClick={() => setQuantity(quantity - 1)}
+                type="button"
+                onClick={() => setQuantity((q) => Math.max(1, q - 1))}
                 disabled={quantity <= 1}
                 className="text-mist-70 hover:text-mist-100"
               >
@@ -87,11 +130,14 @@ const ProductDetail = () => {
               <input
                 type="number"
                 value={quantity}
-                onChange={(e) => setQuantity(e.target.value)}
+                onChange={(e) => setQuantity(Number(e.target.value) || 1)}
                 className="w-full text-center text-mist-70"
               />
               <button
-                onClick={() => setQuantity(quantity + 1)}
+                type="button"
+                onClick={() =>
+                  setQuantity((q) => Math.min(product.stock || q + 1, q + 1))
+                }
                 disabled={quantity >= product.stock}
                 className="text-mist-70 hover:text-mist-100"
               >
@@ -105,7 +151,7 @@ const ProductDetail = () => {
               Add to Cart
             </button>
             <p>
-              status: {}
+              status:{" "}
               <b>
                 {product.stock <= 0
                   ? "Out of Stock"
@@ -120,6 +166,7 @@ const ProductDetail = () => {
             <p className="text-mist-70">{product.description}</p>
           </div>
         </div>
+
         <div className="mt-10 flex flex-col gap-4">
           <div className="flex flex-wrap items-center justify-between gap-4">
             <h2 className="text-2xl font-bold text-mist-70">Reviews</h2>
@@ -132,15 +179,71 @@ const ProductDetail = () => {
             </button>
           </div>
           <div className="flex flex-col gap-4">
-            {product.reviews &&
-              Array.isArray(product.reviews) &&
-              product.reviews.length > 0 &&
-              product.reviews.map((review) => (
+            {reviews.length > 0 ? (
+              reviews.map((review) => (
                 <ReviewCard key={review._id} review={review} />
-              ))}
+              ))
+            ) : (
+              <p className="text-mist-70">No reviews yet.</p>
+            )}
           </div>
         </div>
       </div>
+
+      {showReviewModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 px-4">
+          <div className="flex w-full max-w-md flex-col gap-4 rounded-md bg-[#15201c] p-6 text-mist">
+            <h3 className="text-xl font-semibold">Submit Review</h3>
+
+            <label className="flex flex-col gap-1 text-sm text-mist-70">
+              Rating (1–5)
+              <input
+                type="number"
+                min={1}
+                max={5}
+                value={rating || ""}
+                onChange={(e) => setRating(Number(e.target.value))}
+                className="rounded-md border border-white/15 bg-[#0f1714] px-3 py-2 text-mist"
+              />
+            </label>
+
+            <label className="flex flex-col gap-1 text-sm text-mist-70">
+              Comment
+              <textarea
+                rows={4}
+                value={comment}
+                onChange={(e) => setComment(e.target.value)}
+                className="rounded-md border border-white/15 bg-[#0f1714] px-3 py-2 text-mist"
+                placeholder="Share your experience..."
+              />
+            </label>
+
+            <div className="flex gap-3">
+              <button
+                type="button"
+                disabled={submitting}
+                onClick={submitReview}
+                className="rounded-md bg-leaf px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-[#4a7d63] disabled:opacity-60"
+              >
+                {submitting ? "Submitting..." : "Submit"}
+              </button>
+              <button
+                type="button"
+                disabled={submitting}
+                onClick={() => {
+                  setShowReviewModal(false);
+                  setRating(0);
+                  setComment("");
+                }}
+                className="rounded-md border border-white/15 px-4 py-2.5 text-sm font-semibold text-mist transition hover:bg-white/5"
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       <Footer />
     </div>
   );
