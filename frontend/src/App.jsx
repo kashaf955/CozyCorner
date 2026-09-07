@@ -4,6 +4,7 @@ import Login from "./views/login.jsx";
 import SignUp from "./views/SignUp.jsx";
 import ProductDetail from "./views/ProductDetail.jsx";
 import Product from "./views/Product.jsx";
+import SearchBar from "./components/layout/SearchBar.jsx";
 
 const App = () => {
   return (
@@ -14,6 +15,7 @@ const App = () => {
         <Route path="/register" element={<SignUp />} />
         <Route path="/product/:id" element={<ProductDetail />} />
         <Route path="/products" element={<Product />} />
+        <Route path="/products/:keyword" element={<SearchBar />} />
       </Routes>
     </Router>
   );
