@@ -9,18 +9,21 @@ import {
   CLEAR_ERRORS,
 } from "../constants/productConstants.js";
 
-export const getProducts = () => async (dispatch) => {
-  try {
-    dispatch({ type: ALL_PRODUCTS_REQUEST });
-    const { data } = await api.get("/products");
-    dispatch({ type: ALL_PRODUCTS_SUCCESS, payload: data });
-  } catch (error) {
-    dispatch({
-      type: ALL_PRODUCTS_FAIL,
-      payload: error.response?.data?.message || "Failed to load products",
-    });
-  }
-};
+export const getProducts =
+  (page = 1, limit = 8) =>
+  async (dispatch) => {
+    try {
+      dispatch({ type: ALL_PRODUCTS_REQUEST });
+      const { data } = await api.get(`/products?page=${page}&limit=${limit}`);
+      dispatch({ type: ALL_PRODUCTS_SUCCESS, payload: data });
+    } catch (error) {
+      dispatch({
+        type: ALL_PRODUCTS_FAIL,
+        payload: error.response?.data?.message || "Failed to load products",
+      });
+    }
+  };
+
 export const getProductDetails = (id) => async (dispatch) => {
   try {
     dispatch({ type: PRODUCT_DETAILS_REQUEST });
@@ -32,7 +35,7 @@ export const getProductDetails = (id) => async (dispatch) => {
       payload: error.response?.data?.message || "Failed to load product details",
     });
   }
-}
+};
 
 export const clearErrors = () => async (dispatch) => {
   dispatch({ type: CLEAR_ERRORS });

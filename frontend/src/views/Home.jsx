@@ -15,7 +15,7 @@ const Home = () => {
   const alert = useAlert();
 
   useEffect(() => {
-    dispatch(getProducts());
+    dispatch(getProducts(1, 7));
   }, [dispatch]);
 
   useEffect(() => {
@@ -29,7 +29,15 @@ const Home = () => {
       <Metadata title="Cozy Corner" description="Home page" keywords="home, page" />
       <Header />
       <Hero />
-      {loading ? <Loader /> : <ProductCard products={products} />}
+      {loading ? (
+        <Loader />
+      ) : (
+        <ProductCard
+          products={products.slice(0, 7)}
+          title="Featured pieces"
+          subtitle="A few quiet favorites to settle into your space."
+        />
+      )}
       <Footer />
     </div>
   );
