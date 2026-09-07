@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { useSearchParams } from "react-router-dom";
 import { getProducts } from "../actions/productAction.js";
 import Loader from "../components/layout/loader.jsx";
 import { useAlert } from "../context/AlertContext.jsx";
@@ -12,6 +13,8 @@ const RESULT_PER_PAGE = 8;
 
 const Product = () => {
   const dispatch = useDispatch();
+  const [searchParams] = useSearchParams();
+  const keyword = searchParams.get("keyword") || "";
   const {
     products = [],
     loading,
@@ -23,8 +26,12 @@ const Product = () => {
   const [currentPage, setCurrentPage] = useState(1);
 
   useEffect(() => {
-    dispatch(getProducts(currentPage, RESULT_PER_PAGE));
-  }, [dispatch, currentPage]);
+    setCurrentPage(1);
+  }, [keyword]);
+
+  useEffect(() => {
+    dispatch(getProducts(currentPage, RESULT_PER_PAGE, keyword));
+  }, [dispatch, currentPage, keyword]);
 
   useEffect(() => {
     if (error) {
@@ -44,9 +51,18 @@ const Product = () => {
         <>
           <ProductCard
             products={products}
-            title="All products"
-            subtitle="Browse the full collection."
+            title={keyword ? `Results for "${keyword}"` : "All products"}
+            subtitle={
+              keyword
+                ? `${productsCount} product${productsCount === 1 ? "" : "s"} found`
+                : "Browse the full collection."
+            }
           />
+          {!loading && products.length === 0 && (
+            <p className="mx-auto max-w-6xl px-6 pb-16 text-center text-mist-70">
+              No products found{keyword ? ` for "${keyword}"` : ""}.
+            </p>
+          )}
           {totalPages > 1 && (
             <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-center gap-2 px-6 pb-16">
               <button

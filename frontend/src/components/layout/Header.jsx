@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Link, NavLink } from "react-router-dom";
+import SearchBar from "./SearchBar.jsx";
 
 const linkClass = ({ isActive }) =>
   `text-sm tracking-wide transition-colors duration-300 ${
@@ -12,7 +13,7 @@ const mobileLinkClass = ({ isActive }) =>
   }`;
 
 const iconBtnClass =
-  "relative inline-flex h-10 w-10 items-center justify-center rounded-md text-white/85 transition duration-300 hover:bg-white/15 hover:text-white";
+  "relative inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-md text-white/85 transition duration-300 hover:bg-white/15 hover:text-white";
 
 const SearchIcon = () => (
   <svg
@@ -98,69 +99,95 @@ const CloseIcon = () => (
 
 const Header = () => {
   const [menuOpen, setMenuOpen] = useState(false);
+  const [searchOpen, setSearchOpen] = useState(false);
 
   const closeMenu = () => setMenuOpen(false);
+  const toggleSearch = () => {
+    setSearchOpen((open) => !open);
+    setMenuOpen(false);
+  };
 
   return (
     <header className="absolute inset-x-0 top-0 z-50">
-      <div className="mx-auto flex max-w-6xl items-center justify-between px-5 py-4 md:px-8 md:py-5">
-        <Link
-          to="/"
-          onClick={closeMenu}
-          className="font-display text-xl font-semibold tracking-tight text-white md:text-2xl"
-        >
-          Cozy Corner
-        </Link>
+      <div
+        className={`mx-auto max-w-6xl px-5 py-4 md:px-8 md:py-5 ${
+          searchOpen ? "rounded-b-md bg-[#0f1714]/95 backdrop-blur-md" : ""
+        }`}
+      >
+        <div className="flex items-center justify-between gap-3">
+          <Link
+            to="/"
+            onClick={closeMenu}
+            className="font-display text-xl font-semibold tracking-tight text-white md:text-2xl"
+          >
+            Cozy Corner
+          </Link>
 
-        {/* Desktop nav */}
-        <nav className="hidden items-center gap-8 md:flex">
-          <ul className="flex items-center gap-8">
-            <li>
-              <NavLink to="/" className={linkClass} end>
-                Home
-              </NavLink>
-            </li>
-            <li>
-              <NavLink to="/products" className={linkClass}>
-                Shop
-              </NavLink>
-            </li>
-          </ul>
+          <nav className="hidden items-center gap-8 md:flex">
+            <ul className="flex items-center gap-8">
+              <li>
+                <NavLink to="/" className={linkClass} end>
+                  Home
+                </NavLink>
+              </li>
+              <li>
+                <NavLink to="/products" className={linkClass}>
+                  Shop
+                </NavLink>
+              </li>
+            </ul>
 
-          <div className="flex items-center gap-1 border-l border-white/20 pl-6">
-            <Link to="/products" className={iconBtnClass} aria-label="Search products">
+            <div className="flex items-center gap-1 border-l border-white/20 pl-6">
+              <button
+                type="button"
+                className={`${iconBtnClass} ${searchOpen ? "bg-white/20 text-white" : ""}`}
+                aria-label="Search products"
+                aria-expanded={searchOpen}
+                onClick={toggleSearch}
+              >
+                <SearchIcon />
+              </button>
+              <Link to="/cart" className={iconBtnClass} aria-label="Cart">
+                <CartIcon />
+              </Link>
+              <Link to="/login" className={iconBtnClass} aria-label="Profile">
+                <ProfileIcon />
+              </Link>
+            </div>
+          </nav>
+
+          <div className="flex items-center gap-1 md:hidden">
+            <button
+              type="button"
+              className={`${iconBtnClass} ${searchOpen ? "bg-white/20 text-white" : ""}`}
+              aria-label="Search products"
+              aria-expanded={searchOpen}
+              onClick={toggleSearch}
+            >
               <SearchIcon />
-            </Link>
+            </button>
             <Link to="/cart" className={iconBtnClass} aria-label="Cart">
               <CartIcon />
             </Link>
-            <Link to="/login" className={iconBtnClass} aria-label="Profile">
-              <ProfileIcon />
-            </Link>
+            <button
+              type="button"
+              className={iconBtnClass}
+              aria-label={menuOpen ? "Close menu" : "Open menu"}
+              aria-expanded={menuOpen}
+              onClick={() => setMenuOpen((open) => !open)}
+            >
+              {menuOpen ? <CloseIcon /> : <MenuIcon />}
+            </button>
           </div>
-        </nav>
-
-        {/* Mobile: search + cart + hamburger */}
-        <div className="flex items-center gap-1 md:hidden">
-          <Link to="/products" className={iconBtnClass} aria-label="Search products">
-            <SearchIcon />
-          </Link>
-          <Link to="/cart" className={iconBtnClass} aria-label="Cart">
-            <CartIcon />
-          </Link>
-          <button
-            type="button"
-            className={iconBtnClass}
-            aria-label={menuOpen ? "Close menu" : "Open menu"}
-            aria-expanded={menuOpen}
-            onClick={() => setMenuOpen((open) => !open)}
-          >
-            {menuOpen ? <CloseIcon /> : <MenuIcon />}
-          </button>
         </div>
+
+        {searchOpen && (
+          <div className="mt-3 border-t border-white/10 pt-3">
+            <SearchBar autoFocus onClose={() => setSearchOpen(false)} />
+          </div>
+        )}
       </div>
 
-      {/* Mobile menu panel */}
       {menuOpen && (
         <div className="border-t border-white/10 bg-[#0f1714]/95 backdrop-blur-md md:hidden">
           <nav className="mx-auto max-w-6xl px-5 py-4">

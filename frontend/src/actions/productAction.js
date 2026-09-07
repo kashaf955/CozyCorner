@@ -10,11 +10,15 @@ import {
 } from "../constants/productConstants.js";
 
 export const getProducts =
-  (page = 1, limit = 8) =>
+  (page = 1, limit = 8, keyword = "") =>
   async (dispatch) => {
     try {
       dispatch({ type: ALL_PRODUCTS_REQUEST });
-      const { data } = await api.get(`/products?page=${page}&limit=${limit}`);
+      let link = `/products?page=${page}&limit=${limit}`;
+      if (keyword) {
+        link += `&keyword=${encodeURIComponent(keyword)}`;
+      }
+      const { data } = await api.get(link);
       dispatch({ type: ALL_PRODUCTS_SUCCESS, payload: data });
     } catch (error) {
       dispatch({
