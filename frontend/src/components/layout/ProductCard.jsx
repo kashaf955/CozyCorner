@@ -5,17 +5,28 @@ const ProductCard = ({
   products = [],
   title = "Featured pieces",
   subtitle = "A few quiet favorites to settle into your space.",
+  embedded = false,
 }) => {
   if (!products.length) return null;
 
   return (
-    <section className="mx-auto max-w-6xl px-6 py-16 md:px-8">
-      <div className="mb-10 max-w-xl">
+    <section
+      className={
+        embedded
+          ? "w-full min-w-0"
+          : "mx-auto max-w-6xl px-6 py-16 md:px-8"
+      }
+    >
+      <div className="mb-8 max-w-xl">
         <h2 className="font-display text-3xl text-mist md:text-4xl">{title}</h2>
         {subtitle && <p className="mt-3 text-mist-70">{subtitle}</p>}
       </div>
 
-      <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+      <div
+        className={`grid grid-cols-1 gap-6 sm:grid-cols-2 ${
+          embedded ? "xl:grid-cols-3" : "lg:grid-cols-3"
+        }`}
+      >
         {products.map((product) => {
           const image =
             product.images?.[0]?.url ||
