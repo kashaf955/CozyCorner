@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { getProductDetails } from "../actions/productAction.js";
+import { getProductDetails, clearErrors } from "../actions/productAction.js";
 import Loader from "../components/layout/loader.jsx";
 import { useAlert } from "../context/AlertContext.jsx";
 import Metadata from "../components/layout/metadata.jsx";
@@ -35,8 +35,9 @@ const ProductDetail = () => {
   useEffect(() => {
     if (error) {
       alert.error(error);
+      dispatch(clearErrors());
     }
-  }, [error, alert]);
+  }, [error, alert, dispatch]);
 
   const submitReview = async () => {
     if (!rating || rating < 1 || rating > 5) {

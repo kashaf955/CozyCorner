@@ -5,7 +5,7 @@ import Footer from "../components/layout/footer.jsx";
 import ProductCard from "../components/layout/ProductCard.jsx";
 import Metadata from "../components/layout/metadata.jsx";
 import Loader from "../components/layout/loader.jsx";
-import { getProducts } from "../actions/productAction.js";
+import { getProducts, clearErrors } from "../actions/productAction.js";
 import { useDispatch, useSelector } from "react-redux";
 import { useAlert } from "../context/AlertContext.jsx";
 
@@ -21,8 +21,9 @@ const Home = () => {
   useEffect(() => {
     if (error) {
       alert.error(error);
+      dispatch(clearErrors());
     }
-  }, [error, alert]);
+  }, [error, alert, dispatch]);
 
   return (
     <div className="min-h-screen bg-[#0f1714]">

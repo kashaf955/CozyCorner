@@ -1,4 +1,4 @@
-import { createContext, useCallback, useContext, useState } from "react";
+import { createContext, useCallback, useContext, useMemo, useState } from "react";
 
 const AlertContext = createContext(null);
 
@@ -6,18 +6,21 @@ export const AlertProvider = ({ children }) => {
   const [alerts, setAlerts] = useState([]);
 
   const show = useCallback((message, type = "info") => {
-    const id = Date.now();
+    const id = Date.now() + Math.random();
     setAlerts((prev) => [...prev, { id, message, type }]);
     setTimeout(() => {
       setAlerts((prev) => prev.filter((alert) => alert.id !== id));
     }, 5000);
   }, []);
 
-  const alert = {
-    success: (message) => show(message, "success"),
-    error: (message) => show(message, "error"),
-    info: (message) => show(message, "info"),
-  };
+  const alert = useMemo(
+    () => ({
+      success: (message) => show(message, "success"),
+      error: (message) => show(message, "error"),
+      info: (message) => show(message, "info"),
+    }),
+    [show]
+  );
 
   return (
     <AlertContext.Provider value={alert}>

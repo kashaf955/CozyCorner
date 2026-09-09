@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useSearchParams } from "react-router-dom";
-import { getProducts } from "../actions/productAction.js";
+import { getProducts, clearErrors } from "../actions/productAction.js";
 import Loader from "../components/layout/loader.jsx";
 import { useAlert } from "../context/AlertContext.jsx";
 import ProductCard from "../components/layout/ProductCard.jsx";
@@ -36,8 +36,9 @@ const Product = () => {
   useEffect(() => {
     if (error) {
       alert.error(error);
+      dispatch(clearErrors());
     }
-  }, [error, alert]);
+  }, [error, alert, dispatch]);
 
   const totalPages = Math.ceil(productsCount / resultPerPage) || 1;
 
