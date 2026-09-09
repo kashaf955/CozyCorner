@@ -29,11 +29,11 @@ const Product = () => {
 
   useEffect(() => {
     setCurrentPage(1);
-  }, [keyword]);
+  }, [keyword, price]);
 
   useEffect(() => {
-    dispatch(getProducts(currentPage, RESULT_PER_PAGE, keyword));
-  }, [dispatch, currentPage, keyword]);
+    dispatch(getProducts(currentPage, RESULT_PER_PAGE, keyword, price));
+  }, [dispatch, currentPage, keyword, price]);
 
   useEffect(() => {
     if (error) {
@@ -50,69 +50,71 @@ const Product = () => {
       <Header />
 
       <div className="mx-auto max-w-6xl px-5 pt-28 pb-16 md:px-8">
-        {loading ? (
-          <Loader />
-        ) : (
-          <div className="flex flex-col gap-8 md:flex-row md:items-start md:gap-8">
-            <Filter price={price} onPriceChange={setPrice} />
+        <div className="flex flex-col gap-8 md:flex-row md:items-start md:gap-8">
+          <Filter price={price} onPriceChange={setPrice} />
 
-            <div className="min-w-0 flex-1">
-              <ProductCard
-                embedded
-                products={products}
-                title={keyword ? `Results for "${keyword}"` : "All products"}
-                subtitle={
-                  keyword
-                    ? `${productsCount} product${productsCount === 1 ? "" : "s"} found`
-                    : "Browse the full collection."
-                }
-              />
+          <div className="min-w-0 flex-1">
+            {loading ? (
+              <Loader />
+            ) : (
+              <>
+                <ProductCard
+                  embedded
+                  products={products}
+                  title={keyword ? `Results for "${keyword}"` : "All products"}
+                  subtitle={
+                    keyword
+                      ? `${productsCount} product${productsCount === 1 ? "" : "s"} found`
+                      : "Browse the full collection."
+                  }
+                />
 
-              {!loading && products.length === 0 && (
-                <p className="mt-6 text-center text-mist-70">
-                  No products found{keyword ? ` for "${keyword}"` : ""}.
-                </p>
-              )}
+                {products.length === 0 && (
+                  <p className="mt-6 text-center text-mist-70">
+                    No products found{keyword ? ` for "${keyword}"` : ""}.
+                  </p>
+                )}
 
-              {totalPages > 1 && (
-                <div className="mt-10 flex flex-wrap items-center justify-center gap-2">
-                  <button
-                    type="button"
-                    disabled={currentPage <= 1}
-                    onClick={() => setCurrentPage((page) => Math.max(1, page - 1))}
-                    className="rounded-md border border-white/15 px-3 py-2 text-sm text-mist disabled:opacity-40"
-                  >
-                    Prev
-                  </button>
-                  {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+                {totalPages > 1 && (
+                  <div className="mt-10 flex flex-wrap items-center justify-center gap-2">
                     <button
-                      key={page}
                       type="button"
-                      onClick={() => setCurrentPage(page)}
-                      className={`min-w-10 rounded-md px-3 py-2 text-sm font-semibold ${
-                        page === currentPage
-                          ? "bg-leaf text-white"
-                          : "border border-white/15 text-mist hover:bg-white/5"
-                      }`}
+                      disabled={currentPage <= 1}
+                      onClick={() => setCurrentPage((page) => Math.max(1, page - 1))}
+                      className="rounded-md border border-white/15 px-3 py-2 text-sm text-mist disabled:opacity-40"
                     >
-                      {page}
+                      Prev
                     </button>
-                  ))}
-                  <button
-                    type="button"
-                    disabled={currentPage >= totalPages}
-                    onClick={() =>
-                      setCurrentPage((page) => Math.min(totalPages, page + 1))
-                    }
-                    className="rounded-md border border-white/15 px-3 py-2 text-sm text-mist disabled:opacity-40"
-                  >
-                    Next
-                  </button>
-                </div>
-              )}
-            </div>
+                    {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+                      <button
+                        key={page}
+                        type="button"
+                        onClick={() => setCurrentPage(page)}
+                        className={`min-w-10 rounded-md px-3 py-2 text-sm font-semibold ${
+                          page === currentPage
+                            ? "bg-leaf text-white"
+                            : "border border-white/15 text-mist hover:bg-white/5"
+                        }`}
+                      >
+                        {page}
+                      </button>
+                    ))}
+                    <button
+                      type="button"
+                      disabled={currentPage >= totalPages}
+                      onClick={() =>
+                        setCurrentPage((page) => Math.min(totalPages, page + 1))
+                      }
+                      className="rounded-md border border-white/15 px-3 py-2 text-sm text-mist disabled:opacity-40"
+                    >
+                      Next
+                    </button>
+                  </div>
+                )}
+              </>
+            )}
           </div>
-        )}
+        </div>
       </div>
 
       <Footer />

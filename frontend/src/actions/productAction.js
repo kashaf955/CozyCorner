@@ -10,14 +10,20 @@ import {
 } from "../constants/productConstants.js";
 
 export const getProducts =
-  (page = 1, limit = 8, keyword = "") =>
+  (page = 1, limit = 8, keyword = "", price = [0, 25000]) =>
   async (dispatch) => {
     try {
       dispatch({ type: ALL_PRODUCTS_REQUEST });
       let link = `/products?page=${page}&limit=${limit}`;
+
       if (keyword) {
         link += `&keyword=${encodeURIComponent(keyword)}`;
       }
+
+      if (price && price.length === 2) {
+        link += `&price[gte]=${price[0]}&price[lte]=${price[1]}`;
+      }
+
       const { data } = await api.get(link);
       dispatch({ type: ALL_PRODUCTS_SUCCESS, payload: data });
     } catch (error) {
