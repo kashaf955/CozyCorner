@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useSearchParams } from "react-router-dom";
-import { getProducts, clearErrors } from "../actions/productAction.js";
+import { filterProducts, clearErrors } from "../actions/productAction.js";
 import Loader from "../components/layout/loader.jsx";
 import { useAlert } from "../context/AlertContext.jsx";
 import ProductCard from "../components/layout/ProductCard.jsx";
@@ -18,11 +18,10 @@ const Product = () => {
   const keyword = searchParams.get("keyword") || "";
   const {
     products = [],
-    loading,
-    error,
     productsCount = 0,
     resultPerPage = RESULT_PER_PAGE,
-  } = useSelector((state) => state.products);
+    filters = {}, loading = false, error = null,
+  } = useSelector((state) => state.filters);
   const alert = useAlert();
   const [currentPage, setCurrentPage] = useState(1);
   const [price, setPrice] = useState([0, 25000]);
@@ -32,7 +31,7 @@ const Product = () => {
   }, [keyword, price]);
 
   useEffect(() => {
-    dispatch(getProducts(currentPage, RESULT_PER_PAGE, keyword, price));
+    dispatch(filterProducts(currentPage, RESULT_PER_PAGE, keyword, price));
   }, [dispatch, currentPage, keyword, price]);
 
   useEffect(() => {

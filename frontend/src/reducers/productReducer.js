@@ -6,6 +6,10 @@ import {
   PRODUCT_DETAILS_SUCCESS,
   PRODUCT_DETAILS_FAIL,
   CLEAR_ERRORS,
+  FILTER_PRODUCTS_REQUEST,
+  FILTER_PRODUCTS_SUCCESS,
+  FILTER_PRODUCTS_FAIL,
+  CLEAR_FILTERS,
 } from "../constants/productConstants.js";
 
 export const productReducer = (state = { products: [], loading: false }, action) => {
@@ -65,3 +69,31 @@ export const productDetailsReducer = (state = { product: {} }, action) => {
             return state
     }
 }
+
+export const filterReducer = (state = { filters: {}}, action) => {
+    switch (action.type) {
+        case FILTER_PRODUCTS_REQUEST:
+            return {
+                ...state,
+                loading: true,
+            };
+        case FILTER_PRODUCTS_SUCCESS:
+            return {
+                loading: false,
+                products: action.payload.products,
+            };
+        case FILTER_PRODUCTS_FAIL:
+            return {
+                loading: false,
+                error: action.payload,
+            };
+        case CLEAR_FILTERS:
+            return {
+                ...state,
+                filters: {},
+                error: null,
+      };
+    default:
+      return state;
+  }
+};
