@@ -7,6 +7,10 @@ const SignUpComp = () => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [avatar, setAvatar] = useState("");
+  const [avatarPreview, setAvatarPreview] = useState("");
+  const [avatarFile, setAvatarFile] = useState(null);
+  const [avatarFilePreview, setAvatarFilePreview] = useState(null);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
@@ -20,6 +24,7 @@ const SignUpComp = () => {
         name,
         email,
         password,
+        avatar,
       });
       navigate("/");
     } catch (err) {
@@ -27,6 +32,14 @@ const SignUpComp = () => {
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleAvatarChange = (e) => {
+    const file = e.target.files[0];
+    setAvatarFile(file);
+    setAvatarPreview(URL.createObjectURL(file));  
+    setAvatar(file);
+    setAvatarFilePreview(URL.createObjectURL(file));
   };
 
   return (
@@ -38,6 +51,26 @@ const SignUpComp = () => {
         <p className="mt-2 text-mist-70">Sign up to continue to Cozy Corner.</p>
 
         <form onSubmit={handleSubmit} className="mt-8 space-y-4">
+          <div>
+            <div>
+              <label htmlFor="avatar" className="mb-1.5 block text-sm text-mist-70">
+                Avatar
+              </label>
+              <input
+                id="avatar"
+                type="file"
+                name="avatar"
+                onChange={handleAvatarChange}
+                required
+                className="w-full rounded-md border border-white/15 bg-[#0f1714] px-4 py-3 text-mist outline-none placeholder:text-white/35 focus:border-[#3d6b54]"
+              />
+            </div>
+            {avatarFilePreview && (
+              <div className="mt-2 flex justify-center items-center">
+                <img src={avatarFilePreview} alt="Avatar" className="w-24 h-24 rounded-full object-cover" />
+              </div>
+            )}
+          </div>
           <div>
             <label htmlFor="name" className="mb-1.5 block text-sm text-mist-70">
               Name
