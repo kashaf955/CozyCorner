@@ -26,14 +26,14 @@ const Product = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [price, setPrice] = useState([0, 25000]);
   const [category, setCategory] = useState("");
-
+  const [ratings, setRatings] = useState([0, 5]);
   useEffect(() => {
     setCurrentPage(1);
-  }, [keyword, price, category]);
+  }, [keyword, price, category, ratings]);
 
   useEffect(() => {
-    dispatch(filterProducts(currentPage, RESULT_PER_PAGE, keyword, price, category));
-  }, [dispatch, currentPage, keyword, price, category]);
+    dispatch(filterProducts(currentPage, RESULT_PER_PAGE, keyword, price, category, ratings));
+  }, [dispatch, currentPage, keyword, price, category, ratings]);
 
   useEffect(() => {
     if (error) {
@@ -51,8 +51,10 @@ const Product = () => {
 
       <div className="mx-auto max-w-6xl px-5 pt-28 pb-16 md:px-8">
         <div className="flex flex-col gap-8 md:flex-row md:items-start md:gap-8">
-          <Filter price={price} onPriceChange={setPrice} onCategoryChange={setCategory} />
-          <div className="min-w-0 flex-1">
+          <div className="min-w-0 flex shrink-0 w-56 lg:w-64 md:mb-0 mb-8">
+          <Filter price={price} onPriceChange={setPrice} onCategoryChange={setCategory} ratings={ratings} onRatingsChange={setRatings} />
+          </div>
+          <div className="min-w-0 flex flex-col gap-8">
             {loading ? (
               <Loader />
             ) : (

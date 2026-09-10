@@ -1,10 +1,9 @@
 import Slider from "@mui/material/Slider";
-import { useState } from "react";
-import { useSelector } from "react-redux";
+import Typography from "@mui/material/Typography";
 
 const CATEGORIES = ["Decoration", "Fashion", "Home", "Beauty", "Sports"];
 
-const Filter = ({ price = [0, 25000], onPriceChange, onCategoryChange }) => {
+const Filter = ({ price = [0, 25000], onPriceChange, onCategoryChange, ratings, onRatingsChange }) => {
   return (
     <aside className="w-full shrink-0 md:w-56 lg:w-64">
       <div className="rounded-lg border border-white/10 bg-[#15201c] p-5">
@@ -33,8 +32,7 @@ const Filter = ({ price = [0, 25000], onPriceChange, onCategoryChange }) => {
             }}
           />
         </div>
-      </div>
-      <div className="mt-4">
+        <div className="mt-4">
         <h3 className="mb-4 font-display text-lg text-mist">Category</h3>
         <ul className="flex flex-col gap-2">
           {CATEGORIES.map((category) => (
@@ -51,6 +49,27 @@ const Filter = ({ price = [0, 25000], onPriceChange, onCategoryChange }) => {
             </li>
           ))}
         </ul>
+      </div>
+      <div className="mt-4">
+        <Typography component="legend" className="text-sm font-medium text-mist-70">Ratings</Typography>
+        <Slider
+          value={ratings}
+          onChange={(_event, newRatings) => onRatingsChange?.(newRatings)}
+          valueLabelDisplay="auto"
+          min={0}
+          max={5}
+          step={0.1}
+          sx={{
+            color: "#3d6b54",
+            "& .MuiSlider-thumb": {
+              backgroundColor: "#e8f0ec",
+            },
+            "& .MuiSlider-rail": {
+              opacity: 0.35,
+            },
+          }}
+        />
+      </div>
       </div>
     </aside>
   );
