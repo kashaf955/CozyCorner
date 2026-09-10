@@ -27,10 +27,6 @@ const Product = () => {
   const [price, setPrice] = useState([0, 25000]);
   const [category, setCategory] = useState("");
 
-  const handleCategoryChange = (e) => {
-    setCategory(e.target.value);
-  };
-
   useEffect(() => {
     setCurrentPage(1);
   }, [keyword, price, category]);
@@ -56,7 +52,6 @@ const Product = () => {
       <div className="mx-auto max-w-6xl px-5 pt-28 pb-16 md:px-8">
         <div className="flex flex-col gap-8 md:flex-row md:items-start md:gap-8">
           <Filter price={price} onPriceChange={setPrice} onCategoryChange={setCategory} />
-          <button type="button" onClick={handleCategoryChange}>Category</button>
           <div className="min-w-0 flex-1">
             {loading ? (
               <Loader />

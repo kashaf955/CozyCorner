@@ -1,15 +1,10 @@
 import Slider from "@mui/material/Slider";
 import { useState } from "react";
+import { useSelector } from "react-redux";
 
-const CATEGORIES = [
-  "Electronics",
-  "Fashion",
-  "Home",
-  "Beauty",
-  "Sports",
-];  
+const CATEGORIES = ["Decoration", "Fashion", "Home", "Beauty", "Sports"];
 
-const Filter = ({ price = [0, 25000], onPriceChange }) => {
+const Filter = ({ price = [0, 25000], onPriceChange, onCategoryChange }) => {
   return (
     <aside className="w-full shrink-0 md:w-56 lg:w-64">
       <div className="rounded-lg border border-white/10 bg-[#15201c] p-5">
@@ -44,14 +39,19 @@ const Filter = ({ price = [0, 25000], onPriceChange }) => {
         <ul className="flex flex-col gap-2">
           {CATEGORIES.map((category) => (
             <li key={category}>
-              <label className="flex items-center gap-2">
-                <input type="checkbox" name={category} value={category} />
-                  <span className="text-sm font-medium text-mist-70">{category}</span>
-                </label>
-              </li>
-            ))}
-          </ul>
-        </div>
+              <label>
+                <input
+                  type="radio"
+                  name="category"
+                  value={category}
+                  onChange={(e) => onCategoryChange?.(e.target.value)}
+                />
+                <span className="text-sm font-medium text-mist-70 ml-2">{category}</span>
+              </label>
+            </li>
+          ))}
+        </ul>
+      </div>
     </aside>
   );
 };
