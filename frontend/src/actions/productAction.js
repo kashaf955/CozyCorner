@@ -11,10 +11,11 @@ import {
   FILTER_PRODUCTS_SUCCESS,
   FILTER_PRODUCTS_FAIL,
   CLEAR_FILTERS,
+  
 } from "../constants/productConstants.js";
 
 export const getProducts =
-  (page = 1, limit = 8, keyword = "", price = [0, 25000]) =>
+  (page = 1, limit = 8, keyword = "", price = [0, 25000], category = "") =>
   async (dispatch) => {
     try {
       dispatch({ type: ALL_PRODUCTS_REQUEST });
@@ -26,6 +27,9 @@ export const getProducts =
 
       if (price && price.length === 2) {
         link += `&price[gte]=${price[0]}&price[lte]=${price[1]}`;
+      }
+      if (category) {
+        link += `&category=${encodeURIComponent(category)}`;
       }
 
       const { data } = await api.get(link);
@@ -55,7 +59,7 @@ export const clearErrors = () => async (dispatch) => {
   dispatch({ type: CLEAR_ERRORS });
 };
 
-export const filterProducts = (page = 1, limit = 8, keyword = "", price = [0, 25000]) => async (dispatch) => {
+export const filterProducts = (page = 1, limit = 8, keyword = "", price = [0, 25000], category = "") => async (dispatch) => {
   try {
     dispatch({ type: FILTER_PRODUCTS_REQUEST });
     let link = `/products?page=${page}&limit=${limit}`;
@@ -64,6 +68,9 @@ export const filterProducts = (page = 1, limit = 8, keyword = "", price = [0, 25
     }
     if (price && price.length === 2) {
       link += `&price[gte]=${price[0]}&price[lte]=${price[1]}`;
+    }
+    if (category) {
+      link += `&category=${encodeURIComponent(category)}`;
     }
     const { data } = await api.get(link);
     dispatch({ type: FILTER_PRODUCTS_SUCCESS, payload: data });

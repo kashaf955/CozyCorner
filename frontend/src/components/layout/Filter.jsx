@@ -1,4 +1,13 @@
 import Slider from "@mui/material/Slider";
+import { useState } from "react";
+
+const CATEGORIES = [
+  "Electronics",
+  "Fashion",
+  "Home",
+  "Beauty",
+  "Sports",
+];  
 
 const Filter = ({ price = [0, 25000], onPriceChange }) => {
   return (
@@ -30,6 +39,19 @@ const Filter = ({ price = [0, 25000], onPriceChange }) => {
           />
         </div>
       </div>
+      <div className="mt-4">
+        <h3 className="mb-4 font-display text-lg text-mist">Category</h3>
+        <ul className="flex flex-col gap-2">
+          {CATEGORIES.map((category) => (
+            <li key={category}>
+              <label className="flex items-center gap-2">
+                <input type="checkbox" name={category} value={category} />
+                  <span className="text-sm font-medium text-mist-70">{category}</span>
+                </label>
+              </li>
+            ))}
+          </ul>
+        </div>
     </aside>
   );
 };
