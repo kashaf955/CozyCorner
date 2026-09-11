@@ -1,6 +1,7 @@
 ﻿import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import api from "../../api.js";
+import {useAlert} from "../../context/AlertContext.jsx";
 
 const LoginComp = () => {
   const navigate = useNavigate();
@@ -8,7 +9,7 @@ const LoginComp = () => {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
-
+  const {setAlert} = useAlert();
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
@@ -17,8 +18,24 @@ const LoginComp = () => {
     try {
       await api.post("/login", { email, password });
       navigate("/");
+      setAlert("Login successful. Redirecting to home page...", "success", {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+      });
     } catch (err) {
       setError(err.response?.data?.message || "Login failed. Try again.");
+      setAlert(err.response?.data?.message || "Login failed. Try again.", "error", {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+      });
     } finally {
       setLoading(false);
     }
