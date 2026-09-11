@@ -9,7 +9,7 @@ const LoginComp = () => {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
-  const {setAlert} = useAlert();
+  const alert = useAlert();
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
@@ -17,25 +17,11 @@ const LoginComp = () => {
 
     try {
       await api.post("/login", { email, password });
+      alert.success("Login successful. Redirecting to home page...");
       navigate("/");
-      setAlert("Login successful. Redirecting to home page...", "success", {
-        position: "top-right",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-      });
     } catch (err) {
       setError(err.response?.data?.message || "Login failed. Try again.");
-      setAlert(err.response?.data?.message || "Login failed. Try again.", "error", {
-        position: "top-right",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-      });
+      alert.error(err.response?.data?.message || "Login failed. Try again.");
     } finally {
       setLoading(false);
     }

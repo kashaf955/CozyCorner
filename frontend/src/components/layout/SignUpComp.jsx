@@ -1,10 +1,12 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import api from "../../api.js";
+import {useAlert} from "../../context/AlertContext.jsx";
 
 const SignUpComp = () => {
   const navigate = useNavigate();
   const [name, setName] = useState("");
+  const alert = useAlert();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [avatar, setAvatar] = useState("");
@@ -27,8 +29,10 @@ const SignUpComp = () => {
         avatar,
       });
       navigate("/");
+      alert.success("Account created successfully. Please login to continue.");
     } catch (err) {
       setError(err.response?.data?.message || "Sign up failed. Try again.");
+      alert.error(err.response?.data?.message || "Sign up failed. Try again.");
     } finally {
       setLoading(false);
     }
