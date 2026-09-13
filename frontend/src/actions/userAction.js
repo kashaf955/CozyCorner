@@ -1,6 +1,6 @@
 import axios from "axios";
 import { LOGIN_REQUEST, LOGIN_SUCCESS, LOGIN_FAIL, CLEAR_ERRORS } from "../constants/userConstants";
-
+import api from "../api/api";
 export const login = (email, password) => async (dispatch) => {
     try {
         dispatch({ type: LOGIN_REQUEST });
@@ -9,11 +9,11 @@ export const login = (email, password) => async (dispatch) => {
                 "Content-Type": "application/json",
             },
         }
-        const { data } = await axios.post("/api/v1/login", { email, password }, config);
-        dispatch({ type: LOGIN_SUCCESS, payload: data.user });
+        const { data } = await api.post("/api/v1/login", { email, password }, config);
+        dispatch({ type: LOGIN_SUCCESS, payload: data.data });
         dispatch({ type: CLEAR_ERRORS });
     } catch (error) {
-        dispatch({ type: LOGIN_FAIL, payload: error.response.data.message });
+        dispatch({ type: LOGIN_FAIL, payload: error.response.data.message || "Login failed" });
         dispatch({ type: CLEAR_ERRORS });
     }
 }

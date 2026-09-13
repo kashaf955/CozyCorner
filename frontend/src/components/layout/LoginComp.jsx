@@ -1,30 +1,36 @@
-﻿import { useState } from "react";
+﻿import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import api from "../../api.js";
-import {useAlert} from "../../context/AlertContext.jsx";
+import { useAlert } from "../../context/AlertContext.jsx";
+import { useDispatch, useSelector } from "react-redux";
+import { login, clearErrors } from "../../actions/userAction.js";
+import api from "../../api/api.js";
 
 const LoginComp = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const alert = useAlert();
+
+  const { loading, isAuthenticated, message } = useSelector(
+    (state) => state.user
+  );
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
-  const [loading, setLoading] = useState(false);
-  const alert = useAlert();
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setError("");
-    setLoading(true);
 
-    try {
-      await api.post("/login", { email, password });
-      alert.success("Login successful. Redirecting to home page...");
-      navigate("/");
-    } catch (err) {
-      setError(err.response?.data?.message || "Login failed. Try again.");
-      alert.error(err.response?.data?.message || "Login failed. Try again.");
-    } finally {
-      setLoading(false);
+  useEffect(() => {
+    if (message) {
+      alert.error(message);
+      dispatch(clearErrors());
     }
+    if (isAuthenticated) {
+      alert.success("Login successful.");
+      navigate("/");
+    }
+  }, [message, isAuthenticated, alert, dispatch, navigate]);
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    dispatch(login(email, password));
   };
 
   return (
@@ -66,9 +72,9 @@ const LoginComp = () => {
             />
           </div>
 
-          {error && (
+          {message && (
             <p className="rounded-md border border-red-400/30 bg-red-500/10 px-3 py-2 text-sm text-red-200">
-              {error}
+              {message}
             </p>
           )}
 
@@ -80,7 +86,6 @@ const LoginComp = () => {
             {loading ? "Signing in..." : "Login"}
           </button>
         </form>
-        <div className="flex items-center justify-center">
 
         <p className="mt-6 text-center text-sm text-mist-70">
           No account?{" "}
@@ -88,11 +93,10 @@ const LoginComp = () => {
             Register
           </Link>
           {" · "}
-          <Link to="/password/forgot" className="text-mist underline underline-offset-4 ml-10">
+          <Link to="/password/forgot" className="text-mist underline underline-offset-4">
             Forgot Password?
           </Link>
         </p>
-        </div>
       </div>
     </section>
   );
