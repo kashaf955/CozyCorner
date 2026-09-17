@@ -3,8 +3,6 @@ import { Link, useNavigate } from "react-router-dom";
 import { useAlert } from "../../context/AlertContext.jsx";
 import { useDispatch, useSelector } from "react-redux";
 import { login, clearErrors } from "../../actions/userAction.js";
-import api from "../../api/api.js";
-
 const LoginComp = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
