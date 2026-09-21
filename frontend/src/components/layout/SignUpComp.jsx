@@ -26,7 +26,11 @@ const SignUpComp = () => {
         name,
         email,
         password,
-        avatar,
+        avatar: avatar,
+      }, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
       });
       navigate("/");
       alert.success("Account created successfully. Please login to continue.");
@@ -42,7 +46,7 @@ const SignUpComp = () => {
     const file = e.target.files[0];
     setAvatarFile(file);
     setAvatarPreview(URL.createObjectURL(file));  
-    setAvatar(file);
+    setAvatar(file.name);
     setAvatarFilePreview(URL.createObjectURL(file));
   };
 
