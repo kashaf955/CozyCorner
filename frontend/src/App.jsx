@@ -5,8 +5,13 @@ import SignUp from "./views/SignUp.jsx";
 import ProductDetail from "./views/ProductDetail.jsx";
 import Product from "./views/Product.jsx";
 import SearchBar from "./components/layout/SearchBar.jsx";
-
+import store from "./store.js";
+import { useEffect } from "react";
+import { loadUser } from "./actions/userAction.js";
 const App = () => {
+  useEffect(() => {
+    store.dispatch(loadUser());
+  }, []);
   return (
     <Router>
       <Routes>
