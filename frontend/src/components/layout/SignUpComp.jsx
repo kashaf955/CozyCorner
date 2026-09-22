@@ -22,16 +22,17 @@ const SignUpComp = () => {
     setLoading(true);
 
     try {
-      await api.post("/register", {
+      const response = await api.post("/register", {
         name,
         email,
         password,
-        avatar: avatar,
+        avatar,
       }, {
         headers: {
-          "Content-Type": "multipart/form-data",
+          "Content-Type": "application/json",
         },
       });
+      console.log(response);
       navigate("/");
       alert.success("Account created successfully. Please login to continue.");
     } catch (err) {
@@ -43,12 +44,14 @@ const SignUpComp = () => {
   };
 
   const handleAvatarChange = (e) => {
-    const file = e.target.files[0];
-    setAvatarFile(file);
-    setAvatarPreview(URL.createObjectURL(file));  
-    setAvatar(file.name);
-    setAvatarFilePreview(URL.createObjectURL(file));
-  };
+  const file = e.target.files[0];
+const reader = new FileReader();
+reader.onload = () => {
+  setAvatarPreview(reader.result);
+  setAvatar(reader.result);
+};
+reader.readAsDataURL(file);
+};
 
   return (
     <section className="flex min-h-screen items-center justify-center bg-[#0f1714] px-6 pt-24 pb-16">
