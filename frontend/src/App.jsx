@@ -8,12 +8,20 @@ import SearchBar from "./components/layout/SearchBar.jsx";
 import store from "./store.js";
 import { useEffect } from "react";
 import { loadUser } from "./actions/userAction.js";
+import Header from "./components/layout/header.jsx";
+import Footer from "./components/layout/footer.jsx";
+import UserOptions from "./components/layout/UserOptions.jsx";
+import { useSelector } from "react-redux";
+
 const App = () => {
+  const { isAuthenticated, user } = useSelector((state) => state.user);
   useEffect(() => {
     store.dispatch(loadUser());
   }, []);
   return (
     <Router>
+      <Header />
+      {isAuthenticated && <UserOptions user={user} />}
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
@@ -22,6 +30,7 @@ const App = () => {
         <Route path="/products" element={<Product />} />
         <Route path="/products/:keyword" element={<SearchBar />} />
       </Routes>
+      <Footer />
     </Router>
   );
 };

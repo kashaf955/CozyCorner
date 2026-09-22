@@ -8,12 +8,13 @@ import Loader from "../components/layout/loader.jsx";
 import { getProducts, clearErrors } from "../actions/productAction.js";
 import { useDispatch, useSelector } from "react-redux";
 import { useAlert } from "../context/AlertContext.jsx";
+import UserOptions from "../components/layout/UserOptions.jsx";
 
 const Home = () => {
   const dispatch = useDispatch();
   const { products = [], loading, error } = useSelector((state) => state.products);
   const alert = useAlert();
-
+  const { user } = useSelector((state) => state.user);
   useEffect(() => {
     dispatch(getProducts(1, 7));
   }, [dispatch]);
@@ -39,6 +40,7 @@ const Home = () => {
           subtitle="A few quiet favorites to settle into your space."
         />
       )}
+      <UserOptions user={user} />
       <Footer />
     </div>
   );
