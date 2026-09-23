@@ -1,20 +1,17 @@
 import { useEffect } from "react";
-import Header from "../components/layout/header.jsx";
 import Hero from "../components/layout/hero.jsx";
-import Footer from "../components/layout/footer.jsx";
 import ProductCard from "../components/layout/ProductCard.jsx";
 import Metadata from "../components/layout/metadata.jsx";
 import Loader from "../components/layout/loader.jsx";
 import { getProducts, clearErrors } from "../actions/productAction.js";
 import { useDispatch, useSelector } from "react-redux";
 import { useAlert } from "../context/AlertContext.jsx";
-import UserOptions from "../components/layout/UserOptions.jsx";
 
 const Home = () => {
   const dispatch = useDispatch();
   const { products = [], loading, error } = useSelector((state) => state.products);
   const alert = useAlert();
-  const { user } = useSelector((state) => state.user);
+
   useEffect(() => {
     dispatch(getProducts(1, 7));
   }, [dispatch]);
@@ -29,7 +26,6 @@ const Home = () => {
   return (
     <div className="min-h-screen bg-[#0f1714]">
       <Metadata title="Cozy Corner" description="Home page" keywords="home, page" />
-      <Header />
       <Hero />
       {loading ? (
         <Loader />
@@ -40,8 +36,6 @@ const Home = () => {
           subtitle="A few quiet favorites to settle into your space."
         />
       )}
-      <UserOptions user={user} />
-      <Footer />
     </div>
   );
 };
