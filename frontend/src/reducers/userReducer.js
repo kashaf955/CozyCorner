@@ -47,8 +47,7 @@ switch(action.type) {
         return {
             ...state,
             loading: false,
-            isAuthenticated: true,
-            user: action.payload,
+            isAuthenticated: true
         };
     case LOAD_USER_SUCCESS:
         return {

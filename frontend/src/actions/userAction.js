@@ -45,7 +45,7 @@ export const loadUser = () => async (dispatch) => {
             },
         }
         const { data } = await api.get("/api/v1/me", config);
-        dispatch({ type: LOAD_USER_SUCCESS, payload: data });
+        dispatch({ type: LOAD_USER_SUCCESS, payload: data.user });
         dispatch({ type: CLEAR_ERRORS });
     } catch (error) {
         dispatch({ type: LOAD_USER_FAIL, payload: error.response.data.message || "Failed to load user" });

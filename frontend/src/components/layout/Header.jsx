@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { Link, NavLink } from "react-router-dom";
 import SearchBar from "./SearchBar.jsx";
+import UserOptions from "./UserOptions.jsx";
+import {useSelector} from "react-redux";
 
 const linkClass = ({ isActive }) =>
   `text-sm tracking-wide transition-colors duration-300 ${
@@ -100,7 +102,8 @@ const CloseIcon = () => (
 const Header = () => {
   const [menuOpen, setMenuOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
-
+  const {user} = useSelector((state) => state.user);
+  const {isAuthenticated,} = useSelector((state) => state.user);
   const closeMenu = () => setMenuOpen(false);
   const toggleSearch = () => {
     setSearchOpen((open) => !open);
@@ -150,9 +153,11 @@ const Header = () => {
               <Link to="/cart" className={iconBtnClass} aria-label="Cart">
                 <CartIcon />
               </Link>
-              <Link to="/login" className={iconBtnClass} aria-label="Profile">
-                <ProfileIcon />
-              </Link>
+              {isAuthenticated ? <UserOptions user={user} /> : (
+                <Link to="/login" className={iconBtnClass} aria-label="Profile">
+                  <ProfileIcon />
+                </Link>
+              )}
             </div>
           </nav>
 
