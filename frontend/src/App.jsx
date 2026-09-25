@@ -10,6 +10,7 @@ import { useEffect } from "react";
 import { loadUser } from "./actions/userAction.js";
 import Header from "./components/layout/header.jsx";
 import Footer from "./components/layout/footer.jsx";
+import Profile from "./views/profile.jsx";
 
 const App = () => {
   useEffect(() => {
@@ -25,6 +26,7 @@ const App = () => {
         <Route path="/product/:id" element={<ProductDetail />} />
         <Route path="/products" element={<Product />} />
         <Route path="/products/:keyword" element={<SearchBar />} />
+        <Route path="/profile" element={<Profile />} />
       </Routes>
       <Footer />
     </Router>
