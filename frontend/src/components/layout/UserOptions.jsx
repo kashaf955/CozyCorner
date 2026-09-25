@@ -27,10 +27,10 @@ const UserOptions = ({ user }) => {
     user?.avatar?.url ||
     `https://ui-avatars.com/api/?name=${encodeURIComponent(user?.name || "User")}&background=3d6b54&color=fff`;
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
     setOpen(false);
-    dispatch(logout());
-    navigate("/login");
+    await dispatch(logout());
+    navigate("/");
   };
 
   return (

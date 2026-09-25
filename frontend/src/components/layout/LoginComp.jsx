@@ -14,6 +14,7 @@ const LoginComp = () => {
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [loginSubmitted, setLoginSubmitted] = useState(false);
 
   useEffect(() => {
     if (message) {
@@ -21,13 +22,16 @@ const LoginComp = () => {
       dispatch(clearErrors());
     }
     if (isAuthenticated) {
-      alert.success("Login successful.");
+      if (loginSubmitted) {
+        alert.success("Login successful.");
+      }
       navigate("/");
     }
-  }, [message, isAuthenticated, alert, dispatch, navigate]);
+  }, [message, isAuthenticated, loginSubmitted, alert, dispatch, navigate]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    setLoginSubmitted(true);
     dispatch(login(email, password));
   };
 
