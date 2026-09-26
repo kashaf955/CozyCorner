@@ -208,8 +208,12 @@ const Header = () => {
                 </NavLink>
               </li>
               <li>
-                <NavLink to="/login" className={mobileLinkClass} onClick={closeMenu}>
-                  Login / Profile
+                <NavLink
+                  to={isAuthenticated ? "/profile" : "/login"}
+                  className={mobileLinkClass}
+                  onClick={closeMenu}
+                >
+                  {isAuthenticated ? "Profile" : "Login"}
                 </NavLink>
               </li>
             </ul>

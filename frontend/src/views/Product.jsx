@@ -1,21 +1,20 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useSearchParams } from "react-router-dom";
+import { useParams, useSearchParams } from "react-router-dom";
 import { filterProducts, clearErrors } from "../actions/productAction.js";
 import Loader from "../components/layout/loader.jsx";
 import { useAlert } from "../context/AlertContext.jsx";
 import ProductCard from "../components/layout/ProductCard.jsx";
 import Metadata from "../components/layout/metadata.jsx";
-import Header from "../components/layout/header.jsx";
-import Footer from "../components/layout/footer.jsx";
 import Filter from "../components/layout/Filter.jsx";
 
 const RESULT_PER_PAGE = 8;
 
 const Product = () => {
   const dispatch = useDispatch();
+  const { keyword: keywordParam } = useParams();
   const [searchParams] = useSearchParams();
-  const keyword = searchParams.get("keyword") || "";
+  const keyword = keywordParam || searchParams.get("keyword") || "";
   const {
     products = [],
     productsCount = 0,
@@ -47,7 +46,6 @@ const Product = () => {
   return (
     <div className="min-h-screen bg-[#0f1714]">
       <Metadata title="Products" description="Products" keywords="Products" />
-      <Header />
 
       <div className="mx-auto max-w-6xl px-5 pt-28 pb-16 md:px-8">
         <div className="flex flex-col gap-8 md:flex-row md:items-start md:gap-8">
@@ -117,8 +115,6 @@ const Product = () => {
           </div>
         </div>
       </div>
-
-      <Footer />
     </div>
   );
 };

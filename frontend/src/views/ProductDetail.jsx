@@ -5,8 +5,6 @@ import { getProductDetails, clearErrors } from "../actions/productAction.js";
 import Loader from "../components/layout/loader.jsx";
 import { useAlert } from "../context/AlertContext.jsx";
 import Metadata from "../components/layout/metadata.jsx";
-import Header from "../components/layout/header.jsx";
-import Footer from "../components/layout/footer.jsx";
 import ProductImageCarousel from "../components/layout/ProductImageCarousel.jsx";
 import RenderStars from "../components/layout/RenderStars.jsx";
 import ReviewCard from "../components/layout/reviewCard.jsx";
@@ -76,10 +74,8 @@ const ProductDetail = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-[#0f1714]">
-        <Header />
+      <div className="flex min-h-screen items-center justify-center bg-[#0f1714] pt-24">
         <Loader />
-        <Footer />
       </div>
     );
   }
@@ -97,7 +93,6 @@ const ProductDetail = () => {
         description={product.description}
         keywords={product.category}
       />
-      <Header />
       <div className="container mx-auto max-w-6xl px-4 py-24">
         <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
           <div className="w-full">
@@ -244,8 +239,6 @@ const ProductDetail = () => {
           </div>
         </div>
       )}
-
-      <Footer />
     </div>
   );
 };
