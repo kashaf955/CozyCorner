@@ -61,6 +61,22 @@ const UserOptions = ({ user }) => {
           >
             Profile
           </Link>
+          <Link
+            to="/orders"
+            onClick={() => setOpen(false)}
+            className="block px-3 py-2 text-sm text-mist transition hover:bg-white/10"
+          >
+            Orders
+          </Link>
+          {user?.role === "admin" && (
+            <Link
+              to="/admin/dashboard"
+              onClick={() => setOpen(false)}
+              className="block px-3 py-2 text-sm text-mist transition hover:bg-white/10"
+            >
+              Dashboard
+            </Link>
+          )}
           <button
             type="button"
             onClick={handleLogout}

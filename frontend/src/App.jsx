@@ -15,7 +15,15 @@ import UpdatePassword from "./views/UpdatePassword.jsx";
 import ForgotPassword from "./views/ForgotPassword.jsx";
 import ResetPassword from "./views/ResetPassword.jsx";
 import Cart from "./views/Cart.jsx";
+import Shipping from "./views/Shipping.jsx";
+import ConfirmOrder from "./views/ConfirmOrder.jsx";
 import Orders from "./views/Orders.jsx";
+import OrderDetails from "./views/OrderDetails.jsx";
+import Dashboard from "./views/admin/Dashboard.jsx";
+import ProductList from "./views/admin/ProductList.jsx";
+import NewProduct from "./views/admin/NewProduct.jsx";
+import OrderList from "./views/admin/OrderList.jsx";
+import UserList from "./views/admin/UserList.jsx";
 
 const App = () => {
   useEffect(() => {
@@ -35,10 +43,18 @@ const App = () => {
         <Route path="/products" element={<Product />} />
         <Route path="/products/:keyword" element={<Product />} />
         <Route path="/cart" element={<Cart />} />
+        <Route path="/shipping" element={<Shipping />} />
+        <Route path="/confirm" element={<ConfirmOrder />} />
         <Route path="/profile" element={<Profile />} />
         <Route path="/profile/update" element={<UpdateProfile />} />
         <Route path="/password/update" element={<UpdatePassword />} />
         <Route path="/orders" element={<Orders />} />
+        <Route path="/order/:id" element={<OrderDetails />} />
+        <Route path="/admin/dashboard" element={<Dashboard />} />
+        <Route path="/admin/products" element={<ProductList />} />
+        <Route path="/admin/product/new" element={<NewProduct />} />
+        <Route path="/admin/orders" element={<OrderList />} />
+        <Route path="/admin/users" element={<UserList />} />
       </Routes>
       <Footer />
     </Router>

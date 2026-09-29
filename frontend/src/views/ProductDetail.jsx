@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { getProductDetails, clearErrors } from "../actions/productAction.js";
+import { addItemsToCart } from "../actions/cartAction.js";
 import Loader from "../components/layout/loader.jsx";
 import { useAlert } from "../context/AlertContext.jsx";
 import Metadata from "../components/layout/metadata.jsx";
@@ -142,7 +143,12 @@ const ProductDetail = () => {
             </div>
             <button
               type="button"
-              className="w-full max-w-xs rounded-md bg-leaf px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-[#4a7d63]"
+              disabled={!product.stock || product.stock < 1}
+              onClick={() => {
+                dispatch(addItemsToCart(product, quantity));
+                alert.success("Added to cart");
+              }}
+              className="w-full max-w-xs rounded-md bg-leaf px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-[#4a7d63] disabled:opacity-50"
             >
               Add to Cart
             </button>
