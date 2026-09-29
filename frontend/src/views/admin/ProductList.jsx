@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import Metadata from "../../components/layout/metadata.jsx";
@@ -8,27 +8,51 @@ import { useAlert } from "../../context/AlertContext.jsx";
 import {
   getAdminProducts,
   deleteProduct,
+  updateProduct,
   clearErrors,
 } from "../../actions/adminAction.js";
-import { DELETE_PRODUCT_RESET } from "../../constants/adminConstants.js";
+import {
+  DELETE_PRODUCT_RESET,
+  UPDATE_PRODUCT_RESET,
+} from "../../constants/adminConstants.js";
 
 const ProductListContent = () => {
   const dispatch = useDispatch();
   const alert = useAlert();
   const { products, loading, error } = useSelector((state) => state.adminProducts);
-  const { isDeleted, error: deleteError } = useSelector((state) => state.productAdmin);
+  const {
+    isDeleted,
+    isUpdated,
+    error: adminError,
+  } = useSelector((state) => state.productAdmin);
+
+  const [stockMap, setStockMap] = useState({});
+  const [priceMap, setPriceMap] = useState({});
 
   useEffect(() => {
     dispatch(getAdminProducts());
   }, [dispatch]);
 
   useEffect(() => {
+    if (products?.length) {
+      const stocks = {};
+      const prices = {};
+      products.forEach((p) => {
+        stocks[p._id] = p.stock ?? 0;
+        prices[p._id] = p.price ?? 0;
+      });
+      setStockMap(stocks);
+      setPriceMap(prices);
+    }
+  }, [products]);
+
+  useEffect(() => {
     if (error) {
       alert.error(error);
       dispatch(clearErrors());
     }
-    if (deleteError) {
-      alert.error(deleteError);
+    if (adminError) {
+      alert.error(adminError);
       dispatch(clearErrors());
     }
     if (isDeleted) {
@@ -36,7 +60,35 @@ const ProductListContent = () => {
       dispatch({ type: DELETE_PRODUCT_RESET });
       dispatch(getAdminProducts());
     }
-  }, [error, deleteError, isDeleted, alert, dispatch]);
+    if (isUpdated) {
+      alert.success("Product updated");
+      dispatch({ type: UPDATE_PRODUCT_RESET });
+      dispatch(getAdminProducts());
+    }
+  }, [error, adminError, isDeleted, isUpdated, alert, dispatch]);
+
+  const handleSave = (product) => {
+    const stock = Number(stockMap[product._id]);
+    const price = Number(priceMap[product._id]);
+    if (!Number.isFinite(stock) || stock < 0) {
+      alert.error("Enter a valid stock (0 or more)");
+      return;
+    }
+    if (!Number.isFinite(price) || price < 0) {
+      alert.error("Enter a valid price");
+      return;
+    }
+    dispatch(
+      updateProduct(product._id, {
+        name: product.name,
+        description: product.description,
+        category: product.category,
+        images: product.images,
+        stock,
+        price,
+      })
+    );
+  };
 
   return (
     <section className="min-h-screen bg-[#0f1714] px-6 pt-28 pb-16">
@@ -52,7 +104,9 @@ const ProductListContent = () => {
           </Link>
         </div>
         {loading ? (
-          <div className="mt-12 flex justify-center"><Loader /></div>
+          <div className="mt-12 flex justify-center">
+            <Loader />
+          </div>
         ) : (
           <div className="mt-8 overflow-x-auto rounded-lg border border-white/10">
             <table className="min-w-full text-left text-sm text-mist">
@@ -68,9 +122,38 @@ const ProductListContent = () => {
                 {(products || []).map((p) => (
                   <tr key={p._id} className="border-t border-white/10">
                     <td className="px-4 py-3">{p.name}</td>
-                    <td className="px-4 py-3">${Number(p.price).toFixed(2)}</td>
-                    <td className="px-4 py-3">{p.stock}</td>
                     <td className="px-4 py-3">
+                      <input
+                        type="number"
+                        min="0"
+                        step="0.01"
+                        value={priceMap[p._id] ?? p.price ?? 0}
+                        onChange={(e) =>
+                          setPriceMap((m) => ({ ...m, [p._id]: e.target.value }))
+                        }
+                        className="w-24 rounded border border-white/20 bg-[#0f1714] px-2 py-1 text-mist outline-none focus:border-leaf"
+                      />
+                    </td>
+                    <td className="px-4 py-3">
+                      <input
+                        type="number"
+                        min="0"
+                        step="1"
+                        value={stockMap[p._id] ?? p.stock ?? 0}
+                        onChange={(e) =>
+                          setStockMap((m) => ({ ...m, [p._id]: e.target.value }))
+                        }
+                        className="w-20 rounded border border-white/20 bg-[#0f1714] px-2 py-1 text-mist outline-none focus:border-leaf"
+                      />
+                    </td>
+                    <td className="space-x-3 px-4 py-3">
+                      <button
+                        type="button"
+                        className="text-leaf hover:underline"
+                        onClick={() => handleSave(p)}
+                      >
+                        Save
+                      </button>
                       <button
                         type="button"
                         className="text-red-300 hover:underline"
