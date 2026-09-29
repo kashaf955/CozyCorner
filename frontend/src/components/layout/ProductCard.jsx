@@ -1,5 +1,8 @@
 import { Link } from "react-router-dom";
+import { useDispatch } from "react-redux";
 import RenderStars from "./RenderStars.jsx";
+import { addItemsToCart } from "../../actions/cartAction.js";
+import { useAlert } from "../../context/AlertContext.jsx";
 
 const ProductCard = ({
   products = [],
@@ -7,7 +10,19 @@ const ProductCard = ({
   subtitle = "A few quiet favorites to settle into your space.",
   embedded = false,
 }) => {
+  const dispatch = useDispatch();
+  const alert = useAlert();
+
   if (!products.length) return null;
+
+  const handleAddToCart = (product) => {
+    if (!product?.stock || product.stock < 1) {
+      alert.error("Out of stock");
+      return;
+    }
+    dispatch(addItemsToCart(product, 1));
+    alert.success("Added to cart");
+  };
 
   return (
     <section
@@ -69,7 +84,9 @@ const ProductCard = ({
               <div className="px-4 pb-4">
                 <button
                   type="button"
-                  className="w-full rounded-md bg-leaf px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-[#4a7d63]"
+                  disabled={!product.stock || product.stock < 1}
+                  onClick={() => handleAddToCart(product)}
+                  className="w-full rounded-md bg-leaf px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-[#4a7d63] disabled:opacity-50"
                 >
                   Add to Cart
                 </button>
