@@ -143,7 +143,7 @@ const ProductDetail = () => {
             </div>
             <button
               type="button"
-              disabled={!product.stock || product.stock < 1}
+              disabled={Number.isFinite(Number(product.stock)) && Number(product.stock) < 1}
               onClick={() => {
                 dispatch(addItemsToCart(product, quantity));
                 alert.success("Added to cart");

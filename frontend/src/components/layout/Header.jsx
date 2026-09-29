@@ -104,8 +104,8 @@ const Header = () => {
   const [searchOpen, setSearchOpen] = useState(false);
   const {user} = useSelector((state) => state.user);
   const {isAuthenticated,} = useSelector((state) => state.user);
-  const { cartItems } = useSelector((state) => state.cart);
-  const cartCount = cartItems?.reduce((acc, item) => acc + item.quantity, 0) || 0;
+  const cartItems = useSelector((state) => state.cart?.cartItems) || [];
+  const cartCount = cartItems.reduce((acc, item) => acc + Number(item.quantity || 0), 0);
   const closeMenu = () => setMenuOpen(false);
   const toggleSearch = () => {
     setSearchOpen((open) => !open);
@@ -152,11 +152,15 @@ const Header = () => {
               >
                 <SearchIcon />
               </button>
-              <Link to="/cart" className={iconBtnClass} aria-label="Cart">
+              <Link
+                to="/cart"
+                className={`${iconBtnClass} overflow-visible`}
+                aria-label={cartCount ? `Cart, ${cartCount} items` : "Cart"}
+              >
                 <CartIcon />
                 {cartCount > 0 && (
-                  <span className="absolute -right-0.5 -top-0.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-leaf px-1 text-[10px] font-semibold text-white">
-                    {cartCount}
+                  <span className="absolute -right-1 -top-1 z-20 flex h-5 min-w-5 items-center justify-center rounded-full bg-white px-1 text-[11px] font-bold leading-none text-[#0f1714] shadow-md">
+                    {cartCount > 99 ? "99+" : cartCount}
                   </span>
                 )}
               </Link>
@@ -178,11 +182,15 @@ const Header = () => {
             >
               <SearchIcon />
             </button>
-            <Link to="/cart" className={iconBtnClass} aria-label="Cart">
+            <Link
+              to="/cart"
+              className={`${iconBtnClass} overflow-visible`}
+              aria-label={cartCount ? `Cart, ${cartCount} items` : "Cart"}
+            >
               <CartIcon />
               {cartCount > 0 && (
-                <span className="absolute -right-0.5 -top-0.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-leaf px-1 text-[10px] font-semibold text-white">
-                  {cartCount}
+                <span className="absolute -right-1 -top-1 z-20 flex h-5 min-w-5 items-center justify-center rounded-full bg-white px-1 text-[11px] font-bold leading-none text-[#0f1714] shadow-md">
+                  {cartCount > 99 ? "99+" : cartCount}
                 </span>
               )}
             </Link>

@@ -16,7 +16,8 @@ const ProductCard = ({
   if (!products.length) return null;
 
   const handleAddToCart = (product) => {
-    if (!product?.stock || product.stock < 1) {
+    const stock = Number(product?.stock);
+    if (Number.isFinite(stock) && stock < 1) {
       alert.error("Out of stock");
       return;
     }
@@ -84,7 +85,7 @@ const ProductCard = ({
               <div className="px-4 pb-4">
                 <button
                   type="button"
-                  disabled={!product.stock || product.stock < 1}
+                  disabled={Number.isFinite(Number(product.stock)) && Number(product.stock) < 1}
                   onClick={() => handleAddToCart(product)}
                   className="w-full rounded-md bg-leaf px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-[#4a7d63] disabled:opacity-50"
                 >

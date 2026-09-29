@@ -1,13 +1,30 @@
-import { createContext, useCallback, useContext, useMemo, useState } from "react";
+import { createContext, useCallback, useContext, useMemo, useRef, useState } from "react";
 
 const AlertContext = createContext(null);
 
 export const AlertProvider = ({ children }) => {
   const [alerts, setAlerts] = useState([]);
+  const lastShownRef = useRef({ key: "", at: 0 });
 
   const show = useCallback((message, type = "info") => {
-    const id = Date.now() + Math.random();
-    setAlerts((prev) => [...prev, { id, message, type }]);
+    const key = `${type}:${message}`;
+    const now = Date.now();
+    // React Strict Mode can run effects twice in dev — skip duplicate toasts
+    if (
+      lastShownRef.current.key === key &&
+      now - lastShownRef.current.at < 800
+    ) {
+      return;
+    }
+    lastShownRef.current = { key, at: now };
+
+    const id = now + Math.random();
+    setAlerts((prev) => {
+      if (prev.some((alert) => alert.message === message && alert.type === type)) {
+        return prev;
+      }
+      return [...prev, { id, message, type }];
+    });
     setTimeout(() => {
       setAlerts((prev) => prev.filter((alert) => alert.id !== id));
     }, 5000);

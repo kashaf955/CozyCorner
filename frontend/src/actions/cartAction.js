@@ -13,8 +13,8 @@ export const addItemsToCart = (product, quantity = 1) => (dispatch, getState) =>
       product: product._id,
       name: product.name,
       price: product.price,
-      image: product.images?.[0]?.url || "",
-      stock: product.stock,
+      image: product.images?.[0]?.url || product.image || "",
+      stock: product.stock ?? 99,
       quantity,
     },
   });
