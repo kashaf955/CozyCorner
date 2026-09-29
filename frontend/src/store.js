@@ -10,6 +10,21 @@ import {
   profileReducer,
   forgotPasswordReducer,
 } from "./reducers/userReducer.js";
+import { cartReducer } from "./reducers/cartReducer.js";
+import {
+  newOrderReducer,
+  myOrdersReducer,
+  orderDetailsReducer,
+  allOrdersReducer,
+  orderReducer,
+} from "./reducers/orderReducer.js";
+import {
+  productsReducer,
+  newProductReducer,
+  productAdminReducer,
+  allUsersReducer,
+  userAdminReducer,
+} from "./reducers/adminReducer.js";
 
 const reducer = combineReducers({
   products: productReducer,
@@ -18,9 +33,32 @@ const reducer = combineReducers({
   user: userReducer,
   profile: profileReducer,
   forgotPassword: forgotPasswordReducer,
+  cart: cartReducer,
+  newOrder: newOrderReducer,
+  myOrders: myOrdersReducer,
+  orderDetails: orderDetailsReducer,
+  allOrders: allOrdersReducer,
+  order: orderReducer,
+  adminProducts: productsReducer,
+  newProduct: newProductReducer,
+  productAdmin: productAdminReducer,
+  allUsers: allUsersReducer,
+  userAdmin: userAdminReducer,
 });
 
-const initialState = {};
+const cartItemsFromStorage = localStorage.getItem("cartItems")
+  ? JSON.parse(localStorage.getItem("cartItems"))
+  : [];
+const shippingInfoFromStorage = localStorage.getItem("shippingInfo")
+  ? JSON.parse(localStorage.getItem("shippingInfo"))
+  : {};
+
+const initialState = {
+  cart: {
+    cartItems: cartItemsFromStorage,
+    shippingInfo: shippingInfoFromStorage,
+  },
+};
 const middleware = [thunk];
 
 const composeEnhancers =
