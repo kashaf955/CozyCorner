@@ -2,8 +2,8 @@ import { Navigate, Outlet } from "react-router-dom";
 import { useSelector } from "react-redux";
 import Loader from "./loader.jsx";
 
-const ProtectedRoute = ({ children }) => {
-  const { loading, isAuthenticated } = useSelector((state) => state.user);
+const ProtectedRoute = ({ children, isAdmin = false }) => {
+  const { loading, isAuthenticated, user } = useSelector((state) => state.user);
 
   if (loading) {
     return (
@@ -15,6 +15,10 @@ const ProtectedRoute = ({ children }) => {
 
   if (!isAuthenticated) {
     return <Navigate to="/login" replace />;
+  }
+
+  if (isAdmin && user?.role !== "admin") {
+    return <Navigate to="/" replace />;
   }
 
   return children ? children : <Outlet />;

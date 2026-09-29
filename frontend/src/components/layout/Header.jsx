@@ -104,6 +104,8 @@ const Header = () => {
   const [searchOpen, setSearchOpen] = useState(false);
   const {user} = useSelector((state) => state.user);
   const {isAuthenticated,} = useSelector((state) => state.user);
+  const { cartItems } = useSelector((state) => state.cart);
+  const cartCount = cartItems?.reduce((acc, item) => acc + item.quantity, 0) || 0;
   const closeMenu = () => setMenuOpen(false);
   const toggleSearch = () => {
     setSearchOpen((open) => !open);
@@ -152,6 +154,11 @@ const Header = () => {
               </button>
               <Link to="/cart" className={iconBtnClass} aria-label="Cart">
                 <CartIcon />
+                {cartCount > 0 && (
+                  <span className="absolute -right-0.5 -top-0.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-leaf px-1 text-[10px] font-semibold text-white">
+                    {cartCount}
+                  </span>
+                )}
               </Link>
               {isAuthenticated ? <UserOptions user={user} /> : (
                 <Link to="/login" className={iconBtnClass} aria-label="Profile">
@@ -173,6 +180,11 @@ const Header = () => {
             </button>
             <Link to="/cart" className={iconBtnClass} aria-label="Cart">
               <CartIcon />
+              {cartCount > 0 && (
+                <span className="absolute -right-0.5 -top-0.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-leaf px-1 text-[10px] font-semibold text-white">
+                  {cartCount}
+                </span>
+              )}
             </Link>
             <button
               type="button"
