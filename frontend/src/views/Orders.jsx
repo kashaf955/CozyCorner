@@ -1,33 +1,27 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { Link } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
 import Metadata from "../components/layout/metadata.jsx";
 import ProtectedRoute from "../components/layout/ProtectedRoute.jsx";
 import Loader from "../components/layout/loader.jsx";
 import { useAlert } from "../context/AlertContext.jsx";
-import api from "../api.js";
+import { myOrders, clearErrors } from "../actions/orderAction.js";
 
 const OrdersContent = () => {
+  const dispatch = useDispatch();
   const alert = useAlert();
-  const [orders, setOrders] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const { orders, loading, error } = useSelector((state) => state.myOrders);
 
   useEffect(() => {
-    let active = true;
-    const loadOrders = async () => {
-      try {
-        const { data } = await api.get("/order/me");
-        if (active) setOrders(data.orders || []);
-      } catch (err) {
-        alert.error(err.response?.data?.message || "Failed to load orders");
-      } finally {
-        if (active) setLoading(false);
-      }
-    };
-    loadOrders();
-    return () => {
-      active = false;
-    };
-  }, [alert]);
+    dispatch(myOrders());
+  }, [dispatch]);
+
+  useEffect(() => {
+    if (error) {
+      alert.error(error);
+      dispatch(clearErrors());
+    }
+  }, [error, alert, dispatch]);
 
   return (
     <section className="min-h-screen bg-[#0f1714] px-6 pt-28 pb-16">
@@ -40,7 +34,7 @@ const OrdersContent = () => {
           <div className="mt-12 flex justify-center">
             <Loader />
           </div>
-        ) : orders.length === 0 ? (
+        ) : !orders?.length ? (
           <div className="mt-10 rounded-lg bg-[#15201c] p-8 text-center">
             <p className="text-mist-70">You have no orders yet.</p>
             <Link
@@ -58,9 +52,12 @@ const OrdersContent = () => {
                 className="rounded-lg border border-white/10 bg-[#15201c] px-5 py-4"
               >
                 <div className="flex flex-wrap items-center justify-between gap-2">
-                  <p className="text-sm text-mist">
+                  <Link
+                    to={`/order/${order._id}`}
+                    className="text-sm text-mist hover:underline"
+                  >
                     Order <span className="text-white/50">#{order._id.slice(-8)}</span>
-                  </p>
+                  </Link>
                   <span className="rounded-full bg-white/10 px-3 py-1 text-xs capitalize text-mist">
                     {order.orderStatus}
                   </span>
