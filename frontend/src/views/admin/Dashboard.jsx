@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
-import Metadata from "../components/layout/metadata.jsx";
-import ProtectedRoute from "../components/layout/ProtectedRoute.jsx";
+import Metadata from "../../components/layout/metadata.jsx";
+import ProtectedRoute from "../../components/layout/ProtectedRoute.jsx";
 
 const DashboardContent = () => {
   const { user } = useSelector((state) => state.user);
