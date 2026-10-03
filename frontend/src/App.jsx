@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import { BrowserRouter as Router, Route, Routes, useLocation } from "react-router-dom";
 import { useEffect } from "react";
 import store from "./store.js";
 import { loadUser } from "./actions/userAction.js";
@@ -19,19 +19,23 @@ import Shipping from "./views/Shipping.jsx";
 import ConfirmOrder from "./views/ConfirmOrder.jsx";
 import Orders from "./views/Orders.jsx";
 import OrderDetails from "./views/OrderDetails.jsx";
+import AdminLayout from "./views/admin/AdminLayout.jsx";
 import Dashboard from "./views/admin/Dashboard.jsx";
 import ProductList from "./views/admin/ProductList.jsx";
 import NewProduct from "./views/admin/NewProduct.jsx";
 import OrderList from "./views/admin/OrderList.jsx";
 import UserList from "./views/admin/UserList.jsx";
 
-const App = () => {
+const AppRoutes = () => {
+  const location = useLocation();
+  const isAdminRoute = location.pathname.startsWith("/admin");
+
   useEffect(() => {
     store.dispatch(loadUser());
   }, []);
 
   return (
-    <Router>
+    <>
       <Header />
       <Routes>
         <Route path="/" element={<Home />} />
@@ -50,15 +54,25 @@ const App = () => {
         <Route path="/password/update" element={<UpdatePassword />} />
         <Route path="/orders" element={<Orders />} />
         <Route path="/order/:id" element={<OrderDetails />} />
-        <Route path="/admin/dashboard" element={<Dashboard />} />
-        <Route path="/admin/products" element={<ProductList />} />
-        <Route path="/admin/product/new" element={<NewProduct />} />
-        <Route path="/admin/orders" element={<OrderList />} />
-        <Route path="/admin/users" element={<UserList />} />
+
+        <Route path="/admin" element={<AdminLayout />}>
+          <Route index element={<Dashboard />} />
+          <Route path="dashboard" element={<Dashboard />} />
+          <Route path="products" element={<ProductList />} />
+          <Route path="product/new" element={<NewProduct />} />
+          <Route path="orders" element={<OrderList />} />
+          <Route path="users" element={<UserList />} />
+        </Route>
       </Routes>
-      <Footer />
-    </Router>
+      {!isAdminRoute && <Footer />}
+    </>
   );
 };
+
+const App = () => (
+  <Router>
+    <AppRoutes />
+  </Router>
+);
 
 export default App;
