@@ -2,7 +2,7 @@ import { BrowserRouter as Router, Route, Routes, useLocation } from "react-route
 import { useEffect } from "react";
 import store from "./store.js";
 import { loadUser } from "./actions/userAction.js";
-import Header from "./components/layout/header.jsx";
+import Header from "./components/layout/Header.jsx";
 import Footer from "./components/layout/footer.jsx";
 import Home from "./views/Home.jsx";
 import Login from "./views/login.jsx";
