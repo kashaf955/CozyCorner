@@ -97,7 +97,7 @@ const ProductList = () => {
           to="/admin/product/new"
           className="rounded-md bg-leaf px-4 py-2.5 text-sm font-semibold text-white hover:bg-[#4a7d63]"
         >
-          New Product
+          Add Product
         </Link>
       </div>
       {loading ? (

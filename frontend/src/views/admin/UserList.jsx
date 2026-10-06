@@ -52,7 +52,7 @@ const UserList = () => {
           to="/admin/user/new"
           className="rounded-md bg-leaf px-4 py-2.5 text-sm font-semibold text-white hover:bg-[#4a7d63]"
         >
-          New User
+          Add User
         </Link>
       </div>
       {loading ? (

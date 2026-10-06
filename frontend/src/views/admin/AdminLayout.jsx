@@ -7,10 +7,8 @@ import ProtectedRoute from "../../components/layout/ProtectedRoute.jsx";
 const navItems = [
   { to: "/admin/dashboard", label: "Overview", end: true },
   { to: "/admin/products", label: "Products", end: false },
-  { to: "/admin/product/new", label: "New Product", end: false },
   { to: "/admin/orders", label: "Orders", end: false },
   { to: "/admin/users", label: "Users", end: false },
-  { to: "/admin/user/new", label: "New User", end: false },
   { to: "/admin/reviews", label: "Reviews", end: false },
 ];
 
