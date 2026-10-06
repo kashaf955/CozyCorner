@@ -140,6 +140,11 @@ const Header = () => {
                   Shop
                 </NavLink>
               </li>
+              <li>
+                <NavLink to="/about" className={linkClass}>
+                  About
+                </NavLink>
+              </li>
             </ul>
 
             <div className="flex items-center gap-1 border-l border-white/20 pl-6">
@@ -225,6 +230,11 @@ const Header = () => {
               <li>
                 <NavLink to="/products" className={mobileLinkClass} onClick={closeMenu}>
                   Shop
+                </NavLink>
+              </li>
+              <li>
+                <NavLink to="/about" className={mobileLinkClass} onClick={closeMenu}>
+                  About
                 </NavLink>
               </li>
               <li>

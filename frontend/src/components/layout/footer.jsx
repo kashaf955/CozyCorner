@@ -26,6 +26,9 @@ const Footer = () => {
 
         <div className="midfooter flex flex-col items-center gap-2">
           <h2 className="text-3xl font-bold text-mist">Cozy Corner</h2>
+          <Link to="/about" className="text-sm text-mist-70 underline-offset-4 hover:text-white hover:underline">
+            About this project
+          </Link>
           <h3 className="mb-2 text-xl font-bold text-mist">Follow Us</h3>
           <div className="footer-links flex gap-4 text-xl">
             <Link to="/" className="hover:text-white" title="Facebook">

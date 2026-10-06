@@ -25,6 +25,7 @@ import ProductList from "./views/admin/ProductList.jsx";
 import NewProduct from "./views/admin/NewProduct.jsx";
 import OrderList from "./views/admin/OrderList.jsx";
 import UserList from "./views/admin/UserList.jsx";
+import About from "./views/About.jsx";
 
 const AppRoutes = () => {
   const location = useLocation();
@@ -39,6 +40,7 @@ const AppRoutes = () => {
       <Header />
       <Routes>
         <Route path="/" element={<Home />} />
+        <Route path="/about" element={<About />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<SignUp />} />
         <Route path="/password/forgot" element={<ForgotPassword />} />
