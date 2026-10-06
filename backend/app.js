@@ -1,3 +1,4 @@
+const path = require('path');
 const express = require('express');
 const app = express();
 const cors = require('cors');
@@ -17,11 +18,24 @@ const allowedOrigins = (
   .map((origin) => origin.trim().replace(/\/$/, ''))
   .filter(Boolean);
 
+const isAllowedOrigin = (origin) => {
+  if (!origin) return true;
+  const normalized = origin.replace(/\/$/, '');
+  if (allowedOrigins.includes(normalized)) return true;
+  if (
+    process.env.NODE_ENV === 'production' &&
+    (/^https:\/\/[\w-]+\.onrender\.com$/i.test(normalized) ||
+      /^https:\/\/[\w.-]+\.vercel\.app$/i.test(normalized))
+  ) {
+    return true;
+  }
+  return false;
+};
+
 app.use(
   cors({
     origin(origin, callback) {
-     
-      if (!origin || allowedOrigins.includes(origin.replace(/\/$/, ''))) {
+      if (isAllowedOrigin(origin)) {
         callback(null, true);
         return;
       }
@@ -45,5 +59,14 @@ app.use('/api/v1', user);
 app.use('/api/v1', order);
 
 app.use(errorMiddleware);
+
+
+const frontendDist = path.join(__dirname, '../frontend/dist');
+if (process.env.NODE_ENV === 'production') {
+  app.use(express.static(frontendDist));
+  app.use((req, res) => {
+    res.sendFile(path.join(frontendDist, 'index.html'));
+  });
+}
 
 module.exports = app;
