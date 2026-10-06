@@ -62,11 +62,16 @@ app.use(errorMiddleware);
 
 
 const frontendDist = path.join(__dirname, '../frontend/dist');
-if (process.env.NODE_ENV === 'production') {
+const frontendIndex = path.join(frontendDist, 'index.html');
+if (process.env.NODE_ENV === 'production' && require('fs').existsSync(frontendIndex)) {
   app.use(express.static(frontendDist));
   app.use((req, res) => {
-    res.sendFile(path.join(frontendDist, 'index.html'));
+    res.sendFile(frontendIndex);
   });
+} else if (process.env.NODE_ENV === 'production') {
+  console.warn(
+    'frontend/dist missing. Set Build Command to: npm install && npm run build'
+  );
 }
 
 module.exports = app;
