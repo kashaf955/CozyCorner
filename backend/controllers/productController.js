@@ -4,6 +4,13 @@ const catchAsyncErrors = require("../middleware/catchAsyncErrors.js");
 const ApiFeatures = require("../utils/apiFeatures.js");
 const cloudinary = require("cloudinary");
 
+const isCloudinaryUrl = (url = "") =>
+  typeof url === "string" &&
+  url.includes("res.cloudinary.com") &&
+  !url.includes("localhost");
+
+// Upload base64 / data-URI images to Cloudinary when creating/updating products.
+// Existing Cloudinary { public_id, url } objects are kept as-is.
 const uploadImages = async (imagesInput) => {
   let images = [];
   if (!imagesInput) return images;
@@ -16,11 +23,37 @@ const uploadImages = async (imagesInput) => {
   const imagesLinks = [];
   for (let i = 0; i < images.length; i++) {
     const image = images[i];
-    if (typeof image === "object" && image.url) {
-      imagesLinks.push(image);
+
+    if (typeof image === "object" && image !== null && isCloudinaryUrl(image.url)) {
+      imagesLinks.push({
+        public_id: image.public_id,
+        url: image.url,
+      });
       continue;
     }
-    const result = await cloudinary.v2.uploader.upload(image, {
+
+    // Admin New Product sends FileReader data URLs (base64)
+    const uploadSource =
+      typeof image === "string"
+        ? image
+        : typeof image === "object" && image?.url
+          ? image.url
+          : null;
+
+    if (!uploadSource || typeof uploadSource !== "string") {
+      continue;
+    }
+
+    // Never persist localhost / Vite asset paths
+    if (
+      uploadSource.includes("localhost") ||
+      uploadSource.includes("127.0.0.1") ||
+      uploadSource.includes("/src/assets/")
+    ) {
+      continue;
+    }
+
+    const result = await cloudinary.v2.uploader.upload(uploadSource, {
       folder: "products",
     });
     imagesLinks.push({
@@ -34,9 +67,17 @@ const uploadImages = async (imagesInput) => {
 
 exports.createProduct = catchAsyncErrors(async (req, res, next) => {
   req.body.user = req.user.id;
-  if (req.body.images) {
-    req.body.images = await uploadImages(req.body.images);
+
+  if (!req.body.images || (Array.isArray(req.body.images) && !req.body.images.length)) {
+    return next(new ErrorHandler("Please upload at least one product image", 400));
   }
+
+  req.body.images = await uploadImages(req.body.images);
+
+  if (!req.body.images.length) {
+    return next(new ErrorHandler("Image upload to Cloudinary failed", 400));
+  }
+
   const product = await Product.create(req.body);
   res.status(201).json({
     success: true,
@@ -65,6 +106,17 @@ exports.updateProduct = catchAsyncErrors(async (req, res, next) => {
   if (!product) {
     return next(new ErrorHandler("Product not found", 404));
   }
+
+  // Only re-upload when new image data is sent (base64 / new files)
+  if (req.body.images) {
+    const uploaded = await uploadImages(req.body.images);
+    if (uploaded.length) {
+      req.body.images = uploaded;
+    } else {
+      delete req.body.images;
+    }
+  }
+
   product = await Product.findByIdAndUpdate(req.params.id, req.body, {
     new: true,
     runValidators: true,
@@ -81,6 +133,13 @@ exports.deleteProduct = catchAsyncErrors(async (req, res, next) => {
   if (!product) {
     return next(new ErrorHandler("Product not found", 404));
   }
+
+  for (const image of product.images || []) {
+    if (image.public_id && isCloudinaryUrl(image.url)) {
+      await cloudinary.v2.uploader.destroy(image.public_id);
+    }
+  }
+
   await product.deleteOne();
   res.status(200).json({
     success: true,

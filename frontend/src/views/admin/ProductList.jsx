@@ -82,7 +82,6 @@ const ProductList = () => {
         name: product.name,
         description: product.description,
         category: product.category,
-        images: product.images,
         stock,
         price,
       })
