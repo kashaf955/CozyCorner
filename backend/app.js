@@ -14,17 +14,19 @@ const allowedOrigins = (
   process.env.FRONTEND_URL || 'http://localhost:5173'
 )
   .split(',')
-  .map((origin) => origin.trim())
+  .map((origin) => origin.trim().replace(/\/$/, ''))
   .filter(Boolean);
 
 app.use(
   cors({
     origin(origin, callback) {
-      if (!origin || allowedOrigins.includes(origin)) {
+     
+      if (!origin || allowedOrigins.includes(origin.replace(/\/$/, ''))) {
         callback(null, true);
         return;
       }
-      callback(new Error(`Origin ${origin} not allowed by CORS`));
+      console.warn(`CORS blocked origin: ${origin}. Allowed: ${allowedOrigins.join(', ')}`);
+      callback(null, false);
     },
     credentials: true,
   })
