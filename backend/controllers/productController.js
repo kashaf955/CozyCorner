@@ -212,7 +212,12 @@ exports.createProductReview = catchAsyncErrors(async (req, res, next) => {
 
 // Get all reviews of a product
 exports.getProductReviews = catchAsyncErrors(async (req, res, next) => {
-  const product = await Product.findById(req.params.id);
+  const productId = req.query.id || req.query.productId;
+  if (!productId) {
+    return next(new ErrorHandler("Please provide a product id", 400));
+  }
+
+  const product = await Product.findById(productId);
   if (!product) {
     return next(new ErrorHandler("Product not found", 404));
   }
@@ -222,25 +227,37 @@ exports.getProductReviews = catchAsyncErrors(async (req, res, next) => {
   });
 });
 
-// Delete review
+// Delete review (admin) — query: productId, reviewId
 exports.deleteReview = catchAsyncErrors(async (req, res, next) => {
-  const product = await Product.findById(req.query.productId);
+  const { productId, reviewId } = req.query;
+  if (!productId || !reviewId) {
+    return next(new ErrorHandler("Please provide productId and reviewId", 400));
+  }
+
+  const product = await Product.findById(productId);
   if (!product) {
     return next(new ErrorHandler("Product not found", 404));
   }
 
   const reviews = product.reviews.filter(
-      (rev) => rev._id.toString() !== req.query.reviewId.toString()
+    (rev) => rev._id.toString() !== reviewId.toString()
   );
+
   let avg = 0;
   reviews.forEach((rev) => {
     avg += rev.rating;
   });
-  product.ratings = avg / reviews.length;
-  product.numOfReviews = reviews.length;
-  await product.findByIdAndUpdate(req.query.productId, { reviews, ratings, numOfReviews }, { validateBeforeSave: false });
+  const ratings = reviews.length === 0 ? 0 : avg / reviews.length;
+  const numOfReviews = reviews.length;
+
+  await Product.findByIdAndUpdate(
+    productId,
+    { reviews, ratings, numOfReviews },
+    { new: true, runValidators: false, useFindAndModify: false }
+  );
+
   res.status(200).json({
     success: true,
-    message: "Review deleted successfully"
+    message: "Review deleted successfully",
   });
 });

@@ -25,6 +25,8 @@ import ProductList from "./views/admin/ProductList.jsx";
 import NewProduct from "./views/admin/NewProduct.jsx";
 import OrderList from "./views/admin/OrderList.jsx";
 import UserList from "./views/admin/UserList.jsx";
+import NewUser from "./views/admin/NewUser.jsx";
+import ProductReviews from "./views/admin/ProductReviews.jsx";
 import About from "./views/About.jsx";
 
 const AppRoutes = () => {
@@ -64,6 +66,8 @@ const AppRoutes = () => {
           <Route path="product/new" element={<NewProduct />} />
           <Route path="orders" element={<OrderList />} />
           <Route path="users" element={<UserList />} />
+          <Route path="user/new" element={<NewUser />} />
+          <Route path="reviews" element={<ProductReviews />} />
         </Route>
       </Routes>
       {!isAdminRoute && <Footer />}

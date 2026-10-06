@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import Metadata from "../../components/layout/metadata.jsx";
 import Loader from "../../components/layout/loader.jsx";
@@ -45,7 +46,15 @@ const UserList = () => {
   return (
     <div>
       <Metadata title="Admin Users" />
-      <h1 className="font-display text-3xl text-mist">Users</h1>
+      <div className="flex flex-wrap items-center justify-between gap-4">
+        <h1 className="font-display text-3xl text-mist">Users</h1>
+        <Link
+          to="/admin/user/new"
+          className="rounded-md bg-leaf px-4 py-2.5 text-sm font-semibold text-white hover:bg-[#4a7d63]"
+        >
+          New User
+        </Link>
+      </div>
       {loading ? (
         <div className="mt-12 flex justify-center">
           <Loader />

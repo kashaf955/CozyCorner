@@ -10,6 +10,8 @@ const Dashboard = () => {
     { to: "/admin/product/new", label: "New Product", desc: "Add a product with images" },
     { to: "/admin/orders", label: "Orders", desc: "Update status or delete orders" },
     { to: "/admin/users", label: "Users", desc: "Manage roles and accounts" },
+    { to: "/admin/user/new", label: "New User", desc: "Create a customer or admin account" },
+    { to: "/admin/reviews", label: "Reviews", desc: "View and delete product reviews" },
   ];
 
   return (
@@ -19,7 +21,7 @@ const Dashboard = () => {
       <p className="mt-2 text-mist-70">
         Welcome, {user?.name}. Select a section from the sidebar or a card below.
       </p>
-      <div className="mt-8 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+      <div className="mt-8 grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
         {cards.map((card) => (
           <Link
             key={card.to}

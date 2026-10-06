@@ -24,6 +24,9 @@ import {
   productAdminReducer,
   allUsersReducer,
   userAdminReducer,
+  newUserReducer,
+  productReviewsReducer,
+  reviewAdminReducer,
 } from "./reducers/adminReducer.js";
 
 const reducer = combineReducers({
@@ -44,6 +47,9 @@ const reducer = combineReducers({
   productAdmin: productAdminReducer,
   allUsers: allUsersReducer,
   userAdmin: userAdminReducer,
+  newUser: newUserReducer,
+  productReviews: productReviewsReducer,
+  reviewAdmin: reviewAdminReducer,
 });
 
 const cartItemsFromStorage = localStorage.getItem("cartItems")

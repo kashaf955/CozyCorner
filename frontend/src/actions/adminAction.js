@@ -21,6 +21,15 @@ import {
   UPDATE_USER_REQUEST,
   UPDATE_USER_SUCCESS,
   UPDATE_USER_FAIL,
+  NEW_USER_REQUEST,
+  NEW_USER_SUCCESS,
+  NEW_USER_FAIL,
+  PRODUCT_REVIEWS_REQUEST,
+  PRODUCT_REVIEWS_SUCCESS,
+  PRODUCT_REVIEWS_FAIL,
+  DELETE_REVIEW_REQUEST,
+  DELETE_REVIEW_SUCCESS,
+  DELETE_REVIEW_FAIL,
   CLEAR_ERRORS,
 } from "../constants/adminConstants.js";
 
@@ -111,6 +120,47 @@ export const deleteUser = (id) => async (dispatch) => {
     dispatch({
       type: DELETE_USER_FAIL,
       payload: error.response?.data?.message || "Failed to delete user",
+    });
+  }
+};
+
+export const createUser = (userData) => async (dispatch) => {
+  try {
+    dispatch({ type: NEW_USER_REQUEST });
+    const { data } = await api.post("/admin/users", userData);
+    dispatch({ type: NEW_USER_SUCCESS, payload: data });
+  } catch (error) {
+    dispatch({
+      type: NEW_USER_FAIL,
+      payload: error.response?.data?.message || "Failed to create user",
+    });
+  }
+};
+
+export const getProductReviews = (productId) => async (dispatch) => {
+  try {
+    dispatch({ type: PRODUCT_REVIEWS_REQUEST });
+    const { data } = await api.get(`/reviews?id=${productId}`);
+    dispatch({ type: PRODUCT_REVIEWS_SUCCESS, payload: data.reviews });
+  } catch (error) {
+    dispatch({
+      type: PRODUCT_REVIEWS_FAIL,
+      payload: error.response?.data?.message || "Failed to load reviews",
+    });
+  }
+};
+
+export const deleteReview = (reviewId, productId) => async (dispatch) => {
+  try {
+    dispatch({ type: DELETE_REVIEW_REQUEST });
+    const { data } = await api.delete(
+      `/reviews?productId=${productId}&reviewId=${reviewId}`
+    );
+    dispatch({ type: DELETE_REVIEW_SUCCESS, payload: data.success });
+  } catch (error) {
+    dispatch({
+      type: DELETE_REVIEW_FAIL,
+      payload: error.response?.data?.message || "Failed to delete review",
     });
   }
 };

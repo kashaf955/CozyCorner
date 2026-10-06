@@ -25,6 +25,17 @@ import {
   UPDATE_USER_SUCCESS,
   UPDATE_USER_FAIL,
   UPDATE_USER_RESET,
+  NEW_USER_REQUEST,
+  NEW_USER_SUCCESS,
+  NEW_USER_FAIL,
+  NEW_USER_RESET,
+  PRODUCT_REVIEWS_REQUEST,
+  PRODUCT_REVIEWS_SUCCESS,
+  PRODUCT_REVIEWS_FAIL,
+  DELETE_REVIEW_REQUEST,
+  DELETE_REVIEW_SUCCESS,
+  DELETE_REVIEW_FAIL,
+  DELETE_REVIEW_RESET,
   CLEAR_ERRORS,
 } from "../constants/adminConstants.js";
 
@@ -117,6 +128,59 @@ export const userAdminReducer = (state = {}, action) => {
     case UPDATE_USER_RESET:
       return { ...state, isUpdated: false };
     case DELETE_USER_RESET:
+      return { ...state, isDeleted: false };
+    case CLEAR_ERRORS:
+      return { ...state, error: null };
+    default:
+      return state;
+  }
+};
+
+export const newUserReducer = (state = { user: {} }, action) => {
+  switch (action.type) {
+    case NEW_USER_REQUEST:
+      return { ...state, loading: true };
+    case NEW_USER_SUCCESS:
+      return {
+        loading: false,
+        success: action.payload.success,
+        user: action.payload.user,
+      };
+    case NEW_USER_FAIL:
+      return { ...state, loading: false, error: action.payload };
+    case NEW_USER_RESET:
+      return { ...state, success: false };
+    case CLEAR_ERRORS:
+      return { ...state, error: null };
+    default:
+      return state;
+  }
+};
+
+export const productReviewsReducer = (state = { reviews: [] }, action) => {
+  switch (action.type) {
+    case PRODUCT_REVIEWS_REQUEST:
+      return { ...state, loading: true };
+    case PRODUCT_REVIEWS_SUCCESS:
+      return { loading: false, reviews: action.payload };
+    case PRODUCT_REVIEWS_FAIL:
+      return { ...state, loading: false, error: action.payload };
+    case CLEAR_ERRORS:
+      return { ...state, error: null };
+    default:
+      return state;
+  }
+};
+
+export const reviewAdminReducer = (state = {}, action) => {
+  switch (action.type) {
+    case DELETE_REVIEW_REQUEST:
+      return { ...state, loading: true };
+    case DELETE_REVIEW_SUCCESS:
+      return { ...state, loading: false, isDeleted: action.payload };
+    case DELETE_REVIEW_FAIL:
+      return { ...state, loading: false, error: action.payload };
+    case DELETE_REVIEW_RESET:
       return { ...state, isDeleted: false };
     case CLEAR_ERRORS:
       return { ...state, error: null };

@@ -180,6 +180,51 @@ exports.updateProfile = catchAsyncErrors(async (req, res, next) => {
   });
 });
 
+// Create user (admin)
+exports.createUser = catchAsyncErrors(async (req, res, next) => {
+  const { name, email, password, role } = req.body;
+
+  if (!name || !email || !password) {
+    return next(new ErrorHandler("Please provide name, email, and password", 400));
+  }
+
+  const exists = await User.findOne({ email });
+  if (exists) {
+    return next(new ErrorHandler("User already exists with this email", 400));
+  }
+
+  let avatar = {
+    public_id: "default",
+    url: `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=3d6b54&color=fff`,
+  };
+
+  if (req.body.avatar) {
+    const myCloud = await cloudinary.v2.uploader.upload(req.body.avatar, {
+      folder: "avatars",
+      width: 150,
+      height: 150,
+      crop: "scale",
+    });
+    avatar = {
+      public_id: myCloud.public_id,
+      url: myCloud.secure_url,
+    };
+  }
+
+  const user = await User.create({
+    name,
+    email,
+    password,
+    role: role === "admin" ? "admin" : "user",
+    avatar,
+  });
+
+  res.status(201).json({
+    success: true,
+    user,
+  });
+});
+
 // Get all users
 exports.getAllUsers = catchAsyncErrors(async (req, res, next) => {
   const users = await User.find();
